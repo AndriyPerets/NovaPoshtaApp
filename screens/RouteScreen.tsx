@@ -56,8 +56,16 @@ export default function RouteScreen({ route }: { route: { params: RouteParams } 
             }),
         })
             .then((response) => response.json())
-            .then((data) => setResult(JSON.stringify(data)))
-            .catch((error) => Alert.alert("Ошибка", error.message))
+            .then((data) => {
+                console.log("Nova Poshta API request successful!");
+                console.log("Result data:", data);
+                setResult(JSON.stringify(data));
+            })
+            .catch((error) => {
+                console.log("Nova Poshta API request failed!");
+                console.log("Error:", error);
+                Alert.alert("Ошибка", error.message);
+            });
     }
 
     const handleClearAll = () => {
@@ -92,21 +100,24 @@ export default function RouteScreen({ route }: { route: { params: RouteParams } 
                     placeholder="Введите город назначения"
                 />
             </View>
-        <View style={styles.inputView}>
-            <Text>{result}</Text>
+            <View style={styles.inputView}>
+                <Text style={styles.input}>
+                    {result && JSON.parse(result)?.data?.[0]?.Cost}
+                </Text>
+                {/*<Text style={styles.input}>{result}</Text>*/}
+            </View>
+            <View style={styles.button}>
+                <Button
+                    title="Submit"
+                    onPress={()=>{
+                        handleNovaPostRequest();
+                        // navigation.navigate('Result');
+                    }}
+                />
+            </View>
+            <Text style={styles.message}>Введите путь</Text>
         </View>
-        <View style={styles.button}>
-            <Button
-                title="Submit"
-                onPress={()=>{
-                    handleNovaPostRequest();
-                    // navigation.navigate('Result');
-                }}
-            />
-        </View>
-        <Text style={styles.message}>Введите путь</Text>
-    </View>
-);
+    );
 }
 
 const styles = StyleSheet.create({
@@ -150,3 +161,5 @@ const styles = StyleSheet.create({
         opacity:0.5,
     }
 });
+
+
