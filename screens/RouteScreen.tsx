@@ -1,6 +1,5 @@
 import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native';
 import React, { useState } from "react";
-import { useNavigation } from '@react-navigation/native';
 
 interface RouteParams {
     volume: number;
@@ -11,14 +10,6 @@ interface RouteParams {
     placesAmount: number;
 }
 
-// interface RouteScreenProps {
-//     route: { params: RouteParams };
-//     navigation: any;
-// };
-// const navigation = useNavigation();
-
-
-// export default function RouteScreen({ route, navigation }: RouteScreenProps) {
 export default function RouteScreen({ route }: { route: { params: RouteParams } }) {
 
 
@@ -104,14 +95,13 @@ export default function RouteScreen({ route }: { route: { params: RouteParams } 
                 <Text style={styles.input}>
                     {result && JSON.parse(result)?.data?.[0]?.Cost}
                 </Text>
-                {/*<Text style={styles.input}>{result}</Text>*/}
+                <Text style={styles.unit}>грн</Text>
             </View>
             <View style={styles.button}>
                 <Button
                     title="Submit"
                     onPress={()=>{
                         handleNovaPostRequest();
-                        // navigation.navigate('Result');
                     }}
                 />
             </View>
