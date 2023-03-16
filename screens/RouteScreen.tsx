@@ -1,5 +1,6 @@
 import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native';
 import React, { useState } from "react";
+import axios from 'axios';
 
 interface RouteParams {
     volume: number;
@@ -11,57 +12,100 @@ interface RouteParams {
 }
 
 export default function RouteScreen({ route }: { route: { params: RouteParams } }) {
-
-
-    const { volume, weight, serviceType, cost, cargoType, placesAmount } = route.params;
-    const [citySender, setCitySender] = useState("0df25497-4b3a-11e4-ab6d-005056801329");
-    const [cityRecipient, setCityRecipient] = useState("6dbe5985-96d1-11ea-a970-b8830365ade4");
+    const [citySenderRef, setCitySenderRef] = useState<string | null>(null);
+    const [cityRecipientRef, setCityRecipientRef] = useState<string | null>(null);
+    const [cityNameSender, setCityNameSender] = useState("");
+    const [cityNameRecipient, setCityNameRecipient] = useState("");
     const [result, setResult] = useState("");
 
     const apiKey = "c762593886e528bd8e7336abce62a78d";
     const novaPoshtaApiUrl = "https://api.novaposhta.ua/v2.0/json/";
 
-    const handleNovaPostRequest = () => {
-        const modelName = "InternetDocument";
-        const calledMethod = "getDocumentPrice";
+    const getCityRefByName = async (cityName: string) => {
+        const modelName = "Address";
+        const calledMethod = "searchSettlements";
         const methodProperties = {
-            CitySender: citySender,
-            CityRecipient: cityRecipient,
-            Weight: weight,
-            ServiceType: serviceType,
-            Cost: cost,
-            CargoType: cargoType,
-            SeatsAmount: placesAmount,
-            VolumeGeneral: volume,
+            CityName: cityName,
+            Limit: 1,
         };
-        fetch(novaPoshtaApiUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
+        try {
+            const response = await axios.post(novaPoshtaApiUrl, {
                 apiKey,
                 modelName,
                 calledMethod,
                 methodProperties,
-            }),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log("Nova Poshta API request successful!");
-                console.log("Result data:", data);
-                setResult(JSON.stringify(data));
-            })
-            .catch((error) => {
-                console.log("Nova Poshta API request failed!");
-                console.log("Error:", error);
-                Alert.alert("Ошибка", error.message);
             });
-    }
+            console.log(`Nova Poshta API searchSettlements request for ${cityName} successful!`);
+            console.log("Result data:", response.data);
+            const cityRef = response.data?.data?.[0]?.Addresses?.[0]?.Ref;
+            // const cityRef = response.data.data[0].Ref;
+            console.log("CityRef:", cityRef);
+            return cityRef;
+        } catch (error) {
+            console.log(`Nova Poshta API searchSettlements request for ${cityName} failed!`);
+            console.log("Error:", error);
+            Alert.alert("Ошибка", error?.message);
+            return null;
+        }
+    };
+
+    const handleNovaPostRequest = async () => {
+        if (!citySenderRef) {
+            const senderRef = await getCityRefByName(cityNameSender);
+            if (senderRef) {
+                setCitySenderRef(senderRef);
+                // setCitySenderRef(cityNameSender);
+                // setCityNameSender(senderRef);
+                console.log(senderRef)
+            } else {
+                return;
+            }
+        }
+        if (!cityRecipientRef) {
+            const recipientRef = await getCityRefByName(cityNameRecipient);
+            if (recipientRef) {
+                setCityRecipientRef(recipientRef);
+                // setCityRecipientRef(cityNameRecipient);
+                // setCityNameRecipient(recipientRef);
+                console.log(recipientRef)
+            } else {
+                return;
+            }
+        }
+        const modelName = "InternetDocument";
+        const calledMethod = "getDocumentPrice";
+        const methodProperties = {
+            CitySender: citySenderRef,
+            CityRecipient: cityRecipientRef,
+            Weight: route.params.weight,
+            ServiceType: route.params.serviceType,
+            Cost: route.params.cost,
+            CargoType: route.params.cargoType,
+            SeatsAmount: route.params.placesAmount,
+            VolumeGeneral: route.params.volume,
+        };
+        try {
+            const response = await axios.post(novaPoshtaApiUrl, {
+                apiKey,
+                modelName,
+                calledMethod,
+                methodProperties,
+            });
+            console.log("Nova Poshta API request successful!");
+            console.log("Result data:", response.data);
+            setResult(JSON.stringify(response.data));
+        } catch (error) {
+            console.log("Nova Poshta API request failed!");
+            console.log("Error:", error);
+            Alert.alert("Ошибка", error?.message);
+        }
+    };
 
     const handleClearAll = () => {
-        setCitySender("0df25497-4b3a-11e4-ab6d-005056801329");
-        setCityRecipient("6dbe5985-96d1-11ea-a970-b8830365ade4");
+        setCitySenderRef(null);
+        setCityRecipientRef(null);
+        setCityNameSender("");
+        setCityNameRecipient("");
         setResult("");
     };
 
@@ -74,20 +118,26 @@ export default function RouteScreen({ route }: { route: { params: RouteParams } 
                 />
             </View>
             <View style={styles.inputView}>
-                <Text style={styles.unit}>откуда</Text>
+                <Text style={styles.unit}>Откуда</Text>
                 <TextInput
                     style={styles.input}
-                    value={citySender}
-                    onChangeText={setCitySender}
+                    value={cityNameSender}
+                    onChangeText={async (text) => {
+                        setCityNameSender(text);
+                        // setCitySenderRef(null);
+                    }}
                     placeholder="Введите город отправления"
                 />
             </View>
             <View style={styles.inputView}>
-                <Text style={styles.unit}>куда</Text>
+                <Text style={styles.unit}>Куда</Text>
                 <TextInput
                     style={styles.input}
-                    value={cityRecipient}
-                    onChangeText={setCityRecipient}
+                    value={cityNameRecipient}
+                    onChangeText={async (text) => {
+                        setCityNameRecipient(text);
+                        // setCityRecipientRef(null);
+                    }}
                     placeholder="Введите город назначения"
                 />
             </View>
@@ -95,14 +145,11 @@ export default function RouteScreen({ route }: { route: { params: RouteParams } 
                 <Text style={styles.input}>
                     {result && JSON.parse(result)?.data?.[0]?.Cost}
                 </Text>
-                <Text style={styles.unit}>грн</Text>
             </View>
             <View style={styles.button}>
                 <Button
                     title="Submit"
-                    onPress={()=>{
-                        handleNovaPostRequest();
-                    }}
+                    onPress={handleNovaPostRequest}
                 />
             </View>
             <Text style={styles.message}>Введите путь</Text>
@@ -113,7 +160,6 @@ export default function RouteScreen({ route }: { route: { params: RouteParams } 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // marginTop:-400,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -151,5 +197,3 @@ const styles = StyleSheet.create({
         opacity:0.5,
     }
 });
-
-
