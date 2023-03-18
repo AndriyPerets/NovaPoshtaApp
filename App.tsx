@@ -1,15 +1,15 @@
-import { StatusBar } from 'expo-status-bar';
-import Navigation from "./navigation";
+import {StatusBar} from 'expo-status-bar';
+import Navigation from "./navigation/MainNavigator";
 
 
 export default function App() {
-    return (
-            <>
-                <Navigation/>
-                <StatusBar style="auto"/>
-            </>
+  return (
+    <>
+      <Navigation/>
+      <StatusBar style="auto"/>
+    </>
 
-    );
+  );
 }
 
 
@@ -32,7 +32,6 @@ export default function App() {
 //         </View>
 //     );
 // }
-
 
 
 // const styles = StyleSheet.create({
