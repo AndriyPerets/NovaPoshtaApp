@@ -1,37 +1,20 @@
 import {NavigationContainer} from "@react-navigation/native";
-import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import {FontAwesome} from "@expo/vector-icons";
-import MainScreen from "../screens/MainScreen";
 import VolumeScreen from "../screens/VolumeScreen";
 import WeightScreen from "../screens/WeightScreen";
 import RouteScreen from "../screens/RouteScreen";
+import {createStackNavigator} from "@react-navigation/stack";
+import ResultScreen from "../screens/ResultScreen";
 
 
 export default function Navigation() {
   return (
     <NavigationContainer>
-      <BottomTabNavigator/>
+      <MainStackNavigator/>
     </NavigationContainer>
   )
 }
 
-// const Stack = createStackNavigator();
-//
-//
-// function RootNavigator(){
-//     return(
-//         <Stack.Navigator>
-//             <Stack.Screen
-//                 name="MainScreen"
-//                 component={BottomTabNavigator}
-//                 options={{ headerShown: false}}
-//             />
-//         </Stack.Navigator>
-//     )
-// }
-
-
-export type BottomTabParamList = {
+export type MainStackParamList = {
   Main: undefined;
   Volume: undefined;
   Weight: {
@@ -45,74 +28,32 @@ export type BottomTabParamList = {
     cargoType: string;
     placesAmount: number;
   };
-  Result: undefined;
+  Result: {
+    result: string;
+  };
 };
 
-const BottomTab = createBottomTabNavigator<BottomTabParamList>();
+const MainStack = createStackNavigator<MainStackParamList>();
 
-function BottomTabNavigator() {
+function MainStackNavigator() {
   return (
-    <BottomTab.Navigator initialRouteName="Main">
-      <BottomTab.Screen
-        name="Main"
-        component={MainScreen}
-        options={{
-          tabBarIcon: ({color, size}) =>
-            <FontAwesome
-              name="home"
-              size={size}
-              color={color}
-            />
-        }}
-      />
-      <BottomTab.Screen
+    <MainStack.Navigator initialRouteName="Main">
+      <MainStack.Screen
         name="Volume"
         component={VolumeScreen}
-        options={{
-          tabBarIcon: ({color, size}) =>
-            <FontAwesome
-              name="home"
-              size={size}
-              color={color}
-            />
-        }}
       />
-      <BottomTab.Screen
+      <MainStack.Screen
         name="Weight"
         component={WeightScreen}
-        options={{
-          tabBarIcon: ({color, size}) =>
-            <FontAwesome
-              name="home"
-              size={size}
-              color={color}
-            />
-        }}
       />
-      <BottomTab.Screen
+      <MainStack.Screen
         name="Route"
         component={RouteScreen}
-        options={{
-          tabBarIcon: ({color, size}) =>
-            <FontAwesome
-              name="home"
-              size={size}
-              color={color}
-            />
-        }}
       />
-      {/*<BottomTab.Screen*/}
-      {/*    name="Result"*/}
-      {/*    component={ResultScreen}*/}
-      {/*    options={{*/}
-      {/*        tabBarIcon:({color, size})=>*/}
-      {/*            <FontAwesome*/}
-      {/*                name="home"*/}
-      {/*                size={size}*/}
-      {/*                color={color}*/}
-      {/*            />*/}
-      {/*    }}*/}
-      {/*/>*/}
-    </BottomTab.Navigator>
+      <MainStack.Screen
+          name="Result"
+          component={ResultScreen}
+      />
+    </MainStack.Navigator>
   )
 }

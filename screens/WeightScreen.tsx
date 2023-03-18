@@ -2,9 +2,9 @@ import {useState} from "react";
 import {TextInput, View, StyleSheet, Text, Button} from "react-native";
 import RouteScreen from "../screens/RouteScreen";
 import {BottomTabScreenProps} from "@react-navigation/bottom-tabs";
-import {BottomTabParamList} from "../navigation/MainNavigator";
+import {MainStackParamList} from "../navigation/MainNavigator";
 
-type Props = BottomTabScreenProps<BottomTabParamList, 'Weight'>;
+type Props = BottomTabScreenProps<MainStackParamList, 'Weight'>;
 
 export default function WeightScreen({navigation}: Props) {
   const [weight, setWeight] = useState("0.1");

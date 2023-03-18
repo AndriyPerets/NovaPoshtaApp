@@ -1,9 +1,9 @@
 import {useState} from "react";
 import {TextInput, View, StyleSheet, Text, Button} from "react-native";
 import {BottomTabScreenProps} from "@react-navigation/bottom-tabs";
-import {BottomTabParamList} from "../navigation/MainNavigator";
+import {MainStackParamList} from "../navigation/MainNavigator";
 
-type Props = BottomTabScreenProps<BottomTabParamList, 'Volume'>;
+type Props = BottomTabScreenProps<MainStackParamList, 'Volume'>;
 
 export default function VolumeScreen({navigation}: Props) {
   const [height, setHeight] = useState<string>("5");

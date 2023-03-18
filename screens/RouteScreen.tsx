@@ -2,9 +2,9 @@ import {Alert, Button, StyleSheet, Text, TextInput, View} from 'react-native';
 import React, {useEffect, useState} from "react";
 import axios from 'axios';
 import {BottomTabScreenProps} from "@react-navigation/bottom-tabs";
-import {BottomTabParamList} from "../navigation/MainNavigator";
+import {MainStackParamList} from "../navigation/MainNavigator";
 
-type Props = BottomTabScreenProps<BottomTabParamList, 'Route'>;
+type Props = BottomTabScreenProps<MainStackParamList, 'Route'>;
 
 export default function RouteScreen({route}: Props) {
   const [citySenderRef, setCitySenderRef] = useState<string>("");
