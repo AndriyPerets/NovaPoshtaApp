@@ -1,9 +1,10 @@
-import {useState} from "react";
-import {TextInput, View, StyleSheet, Text, Button} from "react-native";
+import {useEffect, useState} from "react";
+import {TextInput, View, StyleSheet, Text, Button, ActivityIndicator, Pressable, ScrollView} from "react-native";
 import RouteScreen from "../screens/RouteScreen";
 import {BottomTabScreenProps} from "@react-navigation/bottom-tabs";
 import {MainStackParamList} from "../navigation/MainNavigator";
 import VerticalSpace from "../components/VerticalSpace";
+import {CargoType, listCargoTypes} from "../API/dictionaries";
 
 type Props = BottomTabScreenProps<MainStackParamList, 'Weight'>;
 
@@ -11,20 +12,42 @@ export default function WeightScreen({navigation}: Props) {
   const [weight, setWeight] = useState("0.1");
   const [serviceType, setServiceType] = useState("WarehouseWarehouse");
   const [cost, setCost] = useState("300");
-  const [cargoType, setCargoType] = useState("Parcel");
+  const [cargoType, setCargoType] = useState<CargoType>();
+  const [allCargoTypes, setAllCargoTypes] = useState<CargoType[]>([]);
   const [placesAmount, setPlacesAmount] = useState("1");
+  const [isLoading, setLoading] = useState(true);
+  const [error, setError] = useState<string>('');
+
+  useEffect(() => {
+    listCargoTypes().then((cargoTypesResponse) => {
+      if (cargoTypesResponse.success) {
+        setAllCargoTypes(cargoTypesResponse.data)
+      } else {
+        if (cargoTypesResponse.errors.length > 0) {
+          setError(cargoTypesResponse.errors[0])
+        }
+        if (cargoTypesResponse.warnings.length > 0) {
+          setError(cargoTypesResponse.warnings[0])
+        }
+        if (cargoTypesResponse.info.length > 0) {
+          setError(cargoTypesResponse.info[0])
+        }
+      }
+    }).catch((e) => {
+      setError(e.message)
+    }).finally(() => setLoading(false));
+  }, []);
 
   const handleClearAll = () => {
     setWeight("0.1");
     setServiceType("WarehouseWarehouse");
     setCost("300");
-    setCargoType("Parcel");
+    setCargoType(undefined);
     setPlacesAmount("1")
   };
 
-
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <VerticalSpace height={200} />
       <View style={styles.button}>
         <Button
@@ -63,15 +86,15 @@ export default function WeightScreen({navigation}: Props) {
         />
         <Text style={styles.unit}>грн</Text>
       </View>
-      <View style={styles.inputView}>
+      <View style={styles.inputViewCargo}>
         <Text style={styles.unit}>тип груза</Text>
-        <TextInput
-          style={styles.input}
-          autoFocus={true}
-          value={cargoType}
-          onChangeText={(text) => setCargoType(text)}
-          keyboardType="numeric"
-        />
+        {cargoType && <Text>{`Юзер выбрал ${cargoType?.Description}`}</Text>}
+        {isLoading ? <ActivityIndicator /> : allCargoTypes.map(cargoTypeListItem => {
+          return (<Pressable onPress={() => setCargoType(cargoTypeListItem)} style={styles.cargoItem} key={cargoTypeListItem.Ref}>
+            <Text>{cargoTypeListItem.Ref}</Text>
+          </Pressable>)
+        })}
+        {error && <Text>{error}</Text>}
         <Text style={styles.unit}> </Text>
       </View>
       <View style={styles.inputView}>
@@ -88,21 +111,24 @@ export default function WeightScreen({navigation}: Props) {
       </View>
       <View style={styles.button}>
         <Button
+          disabled={!cargoType}
           title="Submit"
           onPress={() => {
-            navigation.navigate('Route', {
-              weight: parseFloat(weight),
-              serviceType,
-              cost: parseFloat(cost),
-              cargoType,
-              placesAmount: parseInt(placesAmount),
-            });
+            if (cargoType) {
+              navigation.navigate('Route', {
+                weight: parseFloat(weight),
+                serviceType,
+                cost: parseFloat(cost),
+                cargoType,
+                placesAmount: parseInt(placesAmount),
+              });
+            }
           }}
 
         />
       </View>
       <Text style={styles.message}>Введите вес посылки</Text>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -119,6 +145,23 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 2,
     opacity: 0.9,
+  },
+  inputViewCargo: {
+    backgroundColor: "#ddd",
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderRadius: 10,
+    margin: 2,
+    opacity: 0.9,
+  },
+  cargoItem: {
+    height: 48,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    marginBottom: 4,
   },
   input: {
     margin: 10,

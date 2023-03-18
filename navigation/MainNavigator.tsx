@@ -3,6 +3,7 @@ import WeightScreen from "../screens/WeightScreen";
 import RouteScreen from "../screens/RouteScreen";
 import {createStackNavigator} from "@react-navigation/stack";
 import ResultScreen from "../screens/ResultScreen";
+import {CargoType} from "../API/dictionaries";
 
 export type MainStackParamList = {
   Main: undefined;
@@ -12,7 +13,7 @@ export type MainStackParamList = {
     weight: number;
     serviceType: string;
     cost: number;
-    cargoType: string;
+    cargoType: CargoType;
     placesAmount: number;
   };
   Result: {

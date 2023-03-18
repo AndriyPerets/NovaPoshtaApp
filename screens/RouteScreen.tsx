@@ -4,6 +4,7 @@ import axios from 'axios';
 import {BottomTabScreenProps} from "@react-navigation/bottom-tabs";
 import {MainStackParamList} from "../navigation/MainNavigator";
 import {DimensionsContext} from "../App";
+import {API_KEY, API_URL} from "../constants";
 
 type Props = BottomTabScreenProps<MainStackParamList, 'Route'>;
 
@@ -16,9 +17,6 @@ export default function RouteScreen({route}: Props) {
   const {weight, serviceType, cargoType, placesAmount, cost} = route.params;
 
   const {volume} = useContext(DimensionsContext)
-
-  const apiKey = "c762593886e528bd8e7336abce62a78d";
-  const novaPoshtaApiUrl = "https://api.novaposhta.ua/v2.0/json/";
 
   const handleNovaPostRequest = async () => {
     if (!citySenderRef || !cityRecipientRef) {
@@ -41,8 +39,8 @@ export default function RouteScreen({route}: Props) {
 
     try {
       // Make the Nova Poshta API request
-      const response = await axios.post(novaPoshtaApiUrl, {
-        apiKey,
+      const response = await axios.post(API_URL, {
+        API_KEY,
         modelName,
         calledMethod,
         methodProperties,
@@ -67,8 +65,8 @@ export default function RouteScreen({route}: Props) {
       Limit: 1,
     };
     try {
-      const response = await axios.post(novaPoshtaApiUrl, {
-        apiKey,
+      const response = await axios.post(API_URL, {
+        API_KEY,
         modelName,
         calledMethod,
         methodProperties,
@@ -94,8 +92,8 @@ export default function RouteScreen({route}: Props) {
       Limit: 1,
     };
     try {
-      const response = await axios.post(novaPoshtaApiUrl, {
-        apiKey,
+      const response = await axios.post(API_URL, {
+        API_KEY,
         modelName,
         calledMethod,
         methodProperties,

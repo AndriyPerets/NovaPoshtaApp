@@ -1,5 +1,31 @@
-// f78173050ce2f5e66e054994f7f45b15
+import axios from "axios/index";
+import {API_KEY, API_URL} from "../constants";
 
-// https://api.novaposhta.ua/v2.0/json/
+export interface NovaPoshtaResponse<T> {
+  success: boolean,
+  data: T[],
+  errors: string[],
+  warnings: string[],
+  info: string[],
+  messageCodes: string[],
+  errorCodes: string[],
+  warningCodes: string[],
+  infoCodes: string[]
+}
 
-// #F31D25
+export interface NovaPoshtaRequest {
+  modelName: string,
+  calledMethod: string,
+  methodProperties: { [key: string]: string; }
+}
+
+export const novaPoshtaRequest = async (request: NovaPoshtaRequest): Promise<NovaPoshtaResponse<any>> => {
+  const {data} = await axios.post(API_URL, {
+    apiKey: API_KEY,
+    ...request,
+    // modelName: request.modelName,
+    // calledMethod: request.calledMethod,
+    // methodProperties: request.methodProperties,
+  })
+  return data
+}
