@@ -5,6 +5,9 @@ import {BottomTabScreenProps} from "@react-navigation/bottom-tabs";
 import {MainStackParamList} from "../navigation/MainNavigator";
 import VerticalSpace from "../components/VerticalSpace";
 import {CargoType, listCargoTypes} from "../API/dictionaries";
+import {useQuery} from "react-query";
+import {NovaPoshtaResponse} from "../API/API";
+import {useCargoTypes} from "../queries/dictionaries";
 
 type Props = BottomTabScreenProps<MainStackParamList, 'Weight'>;
 
@@ -13,30 +16,49 @@ export default function WeightScreen({navigation}: Props) {
   const [serviceType, setServiceType] = useState("WarehouseWarehouse");
   const [cost, setCost] = useState("300");
   const [cargoType, setCargoType] = useState<CargoType>();
-  const [allCargoTypes, setAllCargoTypes] = useState<CargoType[]>([]);
   const [placesAmount, setPlacesAmount] = useState("1");
-  const [isLoading, setLoading] = useState(true);
-  const [error, setError] = useState<string>('');
+  const cargoTypes = useCargoTypes()
 
-  useEffect(() => {
-    listCargoTypes().then((cargoTypesResponse) => {
-      if (cargoTypesResponse.success) {
-        setAllCargoTypes(cargoTypesResponse.data)
-      } else {
-        if (cargoTypesResponse.errors.length > 0) {
-          setError(cargoTypesResponse.errors[0])
-        }
-        if (cargoTypesResponse.warnings.length > 0) {
-          setError(cargoTypesResponse.warnings[0])
-        }
-        if (cargoTypesResponse.info.length > 0) {
-          setError(cargoTypesResponse.info[0])
-        }
-      }
-    }).catch((e) => {
-      setError(e.message)
-    }).finally(() => setLoading(false));
-  }, []);
+  // const cargoTypes = useQuery<CargoType[], any, CargoType[]>('cargoTypes', async () => {
+  //   const cargoTypesResponse = await listCargoTypes();
+  //   if (cargoTypesResponse.success) {
+  //     return cargoTypesResponse.data
+  //   } else {
+  //     if (cargoTypesResponse.errors.length > 0) {
+  //       throw new Error(cargoTypesResponse.errors[0])
+  //     }
+  //     if (cargoTypesResponse.warnings.length > 0) {
+  //       throw new Error(cargoTypesResponse.errors[0])
+  //     }
+  //     if (cargoTypesResponse.info.length > 0) {
+  //       throw new Error(cargoTypesResponse.errors[0])
+  //     }
+  //     throw new Error('Unexpected error')
+  //   }
+  // })
+
+  // const [isLoading, setLoading] = useState(true);
+  // const [error, setError] = useState<string>('');
+
+  // useEffect(() => {
+  //   listCargoTypes().then((cargoTypesResponse) => {
+  //     if (cargoTypesResponse.success) {
+  //       setAllCargoTypes(cargoTypesResponse.data)
+  //     } else {
+  //       if (cargoTypesResponse.errors.length > 0) {
+  //         setError(cargoTypesResponse.errors[0])
+  //       }
+  //       if (cargoTypesResponse.warnings.length > 0) {
+  //         setError(cargoTypesResponse.warnings[0])
+  //       }
+  //       if (cargoTypesResponse.info.length > 0) {
+  //         setError(cargoTypesResponse.info[0])
+  //       }
+  //     }
+  //   }).catch((e) => {
+  //     setError(e.message)
+  //   }).finally(() => setLoading(false));
+  // }, []);
 
   const handleClearAll = () => {
     setWeight("0.1");
@@ -89,12 +111,12 @@ export default function WeightScreen({navigation}: Props) {
       <View style={styles.inputViewCargo}>
         <Text style={styles.unit}>тип груза</Text>
         {cargoType && <Text>{`Юзер выбрал ${cargoType?.Description}`}</Text>}
-        {isLoading ? <ActivityIndicator /> : allCargoTypes.map(cargoTypeListItem => {
+        {cargoTypes.isLoading ? <ActivityIndicator /> : !cargoTypes.error && cargoTypes.data?.map(cargoTypeListItem => {
           return (<Pressable onPress={() => setCargoType(cargoTypeListItem)} style={styles.cargoItem} key={cargoTypeListItem.Ref}>
             <Text>{cargoTypeListItem.Ref}</Text>
           </Pressable>)
         })}
-        {error && <Text>{error}</Text>}
+        {cargoTypes.error && <Text>{cargoTypes.error}</Text>}
         <Text style={styles.unit}> </Text>
       </View>
       <View style={styles.inputView}>

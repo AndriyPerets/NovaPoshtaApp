@@ -2,6 +2,7 @@ import {Dimensions, ImageBackground, StyleSheet} from "react-native";
 import {DefaultTheme, NavigationContainer} from "@react-navigation/native";
 import React, {createContext, useState} from "react";
 import MainStackNavigator from "./navigation/MainNavigator";
+import {QueryClient, QueryClientProvider} from "react-query";
 
 
 const navTheme = {
@@ -23,15 +24,19 @@ export const DimensionsContext = createContext<DimensionsContextProps>({
   volume: undefined
 });
 
+const queryClient = new QueryClient()
+
 export default function App() {
   const [volume, setVolume] = useState<number>();
 
   return (
     <ImageBackground resizeMode={'contain'} style={styles.background} source={require('./assets/novaPost.png')}>
       <DimensionsContext.Provider value={{volume, setVolume}}>
-        <NavigationContainer theme={navTheme}>
-          <MainStackNavigator/>
-        </NavigationContainer>
+        <QueryClientProvider client={queryClient}>
+          <NavigationContainer theme={navTheme}>
+            <MainStackNavigator/>
+          </NavigationContainer>
+        </QueryClientProvider>
       </DimensionsContext.Provider>
     </ImageBackground>
 

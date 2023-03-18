@@ -25,7 +25,7 @@ const MainStack = createStackNavigator<MainStackParamList>();
 
 const MainStackNavigator = () => {
   return (
-    <MainStack.Navigator initialRouteName="Main">
+    <MainStack.Navigator initialRouteName="Weight">
       <MainStack.Screen
         name="Volume"
         options={{headerShown: false}}
