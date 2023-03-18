@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {View, StyleSheet, Dimensions} from "react-native";
 import {BottomTabScreenProps} from "@react-navigation/bottom-tabs";
 import {MainStackParamList} from "../navigation/MainNavigator";
@@ -6,6 +6,7 @@ import {TextInput, Button, Text} from "react-native-paper";
 import VerticalSpace from "../components/VerticalSpace";
 import Row from "../components/Row";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {DimensionsContext} from "../App";
 
 type Props = BottomTabScreenProps<MainStackParamList, 'Volume'>;
 
@@ -13,7 +14,8 @@ export default function VolumeScreen({navigation}: Props) {
   const [height, setHeight] = useState<string>();
   const [width, setWidth] = useState<string>();
   const [length, setLength] = useState<string>();
-  const [volume, setVolume] = useState<number>();
+
+  const {volume, setVolume} = useContext(DimensionsContext)
 
   const {top} = useSafeAreaInsets();
 
@@ -71,13 +73,13 @@ export default function VolumeScreen({navigation}: Props) {
       <VerticalSpace height={top + 32} />
       <Text style={styles.title} variant="headlineLarge">Введите размеры коробки</Text>
       <VerticalSpace height={16}/>
-      <TextInput onChangeText={setHeight} keyboardType={'numeric'} value={height} placeholder={'15'} mode={'outlined'} style={styles.input}
+      <TextInput autoFocus onChangeText={setHeight} returnKeyType={'done'} keyboardType={'numeric'} value={height} placeholder={'15'} mode={'outlined'} style={styles.input}
                  label={'Высота'}/>
       <VerticalSpace height={16}/>
-      <TextInput onChangeText={setWidth} keyboardType={'numeric'} value={width} placeholder={'15'} mode={'outlined'} style={styles.input}
+      <TextInput onChangeText={setWidth} returnKeyType={'done'} keyboardType={'numeric'} value={width} placeholder={'15'} mode={'outlined'} style={styles.input}
                  label={'Ширина'}/>
       <VerticalSpace height={16}/>
-      <TextInput onChangeText={setLength} keyboardType={'numeric'} value={length} placeholder={'15'} mode={'outlined'} style={styles.input}
+      <TextInput onChangeText={setLength} returnKeyType={'done'} keyboardType={'numeric'} value={length} placeholder={'15'} mode={'outlined'} style={styles.input}
                  label={'Длина'}/>
       <VerticalSpace height={16}/>
       <Text style={styles.title} variant="headlineLarge">{volume ? `${volume.toFixed(3)}m3` : 'Введите размеры'}</Text>
@@ -88,11 +90,12 @@ export default function VolumeScreen({navigation}: Props) {
           onPress={handleClearAll}
         >ClearAll</Button>
         <Button
+          disabled={!volume}
           mode={'contained'}
           onPress={() => {
-            navigation.navigate('Weight', {
-              volume
-            });
+            if (volume) {
+              navigation.navigate('Weight');
+            }
           }}
         >Next</Button>
       </Row>
@@ -103,7 +106,6 @@ export default function VolumeScreen({navigation}: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     paddingHorizontal: 16,
   },
   title: {

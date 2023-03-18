@@ -3,6 +3,7 @@ import {TextInput, View, StyleSheet, Text, Button} from "react-native";
 import RouteScreen from "../screens/RouteScreen";
 import {BottomTabScreenProps} from "@react-navigation/bottom-tabs";
 import {MainStackParamList} from "../navigation/MainNavigator";
+import VerticalSpace from "../components/VerticalSpace";
 
 type Props = BottomTabScreenProps<MainStackParamList, 'Weight'>;
 
@@ -24,6 +25,7 @@ export default function WeightScreen({navigation}: Props) {
 
   return (
     <View style={styles.container}>
+      <VerticalSpace height={200} />
       <View style={styles.button}>
         <Button
           title="ClearAll"
@@ -38,7 +40,6 @@ export default function WeightScreen({navigation}: Props) {
           value={weight}
           onChangeText={(text) => setWeight(text)}
           keyboardType="numeric"
-          returnKeyType="done"
         />
         <Text style={styles.unit}>кг</Text>
       </View>
@@ -49,7 +50,6 @@ export default function WeightScreen({navigation}: Props) {
           value={serviceType}
           onChangeText={(text) => setServiceType(text)}
           keyboardType="numeric"
-          returnKeyType="done"
         />
         <Text style={styles.unit}> </Text>
       </View>
@@ -60,7 +60,6 @@ export default function WeightScreen({navigation}: Props) {
           value={cost}
           onChangeText={(text) => setCost(text)}
           keyboardType="numeric"
-          returnKeyType="done"
         />
         <Text style={styles.unit}>грн</Text>
       </View>
@@ -72,7 +71,6 @@ export default function WeightScreen({navigation}: Props) {
           value={cargoType}
           onChangeText={(text) => setCargoType(text)}
           keyboardType="numeric"
-          returnKeyType="done"
         />
         <Text style={styles.unit}> </Text>
       </View>
@@ -83,7 +81,7 @@ export default function WeightScreen({navigation}: Props) {
           autoFocus={true}
           value={placesAmount}
           onChangeText={(text) => setPlacesAmount(text)}
-          keyboardType="numeric"
+          keyboardType="number-pad"
           returnKeyType="done"
         />
         <Text style={styles.unit}> </Text>
@@ -111,9 +109,6 @@ export default function WeightScreen({navigation}: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: -300,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   inputView: {
     backgroundColor: "#ddd",

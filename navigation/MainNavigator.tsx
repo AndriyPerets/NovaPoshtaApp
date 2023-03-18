@@ -1,27 +1,14 @@
-import {NavigationContainer} from "@react-navigation/native";
 import VolumeScreen from "../screens/VolumeScreen";
 import WeightScreen from "../screens/WeightScreen";
 import RouteScreen from "../screens/RouteScreen";
 import {createStackNavigator} from "@react-navigation/stack";
 import ResultScreen from "../screens/ResultScreen";
 
-
-export default function Navigation() {
-  return (
-    <NavigationContainer>
-      <MainStackNavigator/>
-    </NavigationContainer>
-  )
-}
-
 export type MainStackParamList = {
   Main: undefined;
   Volume: undefined;
-  Weight: {
-    volume?: number;
-  };
+  Weight: undefined;
   Route: {
-    volume?: number;
     weight: number;
     serviceType: string;
     cost: number;
@@ -35,7 +22,7 @@ export type MainStackParamList = {
 
 const MainStack = createStackNavigator<MainStackParamList>();
 
-function MainStackNavigator() {
+const MainStackNavigator = () => {
   return (
     <MainStack.Navigator initialRouteName="Main">
       <MainStack.Screen
@@ -45,6 +32,7 @@ function MainStackNavigator() {
       />
       <MainStack.Screen
         name="Weight"
+        options={{headerTransparent: true}}
         component={WeightScreen}
       />
       <MainStack.Screen
@@ -58,3 +46,5 @@ function MainStackNavigator() {
     </MainStack.Navigator>
   )
 }
+
+export default MainStackNavigator;

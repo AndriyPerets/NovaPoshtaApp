@@ -1,8 +1,9 @@
 import {Alert, Button, StyleSheet, Text, TextInput, View} from 'react-native';
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import axios from 'axios';
 import {BottomTabScreenProps} from "@react-navigation/bottom-tabs";
 import {MainStackParamList} from "../navigation/MainNavigator";
+import {DimensionsContext} from "../App";
 
 type Props = BottomTabScreenProps<MainStackParamList, 'Route'>;
 
@@ -12,7 +13,9 @@ export default function RouteScreen({route}: Props) {
   const [cityNameSender, setCityNameSender] = useState("Киев");
   const [cityNameRecipient, setCityNameRecipient] = useState("Львов");
   const [result, setResult] = useState("");
-  const {weight, volume, serviceType, cargoType, placesAmount, cost} = route.params;
+  const {weight, serviceType, cargoType, placesAmount, cost} = route.params;
+
+  const {volume} = useContext(DimensionsContext)
 
   const apiKey = "c762593886e528bd8e7336abce62a78d";
   const novaPoshtaApiUrl = "https://api.novaposhta.ua/v2.0/json/";
