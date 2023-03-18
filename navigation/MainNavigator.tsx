@@ -40,6 +40,7 @@ function MainStackNavigator() {
     <MainStack.Navigator initialRouteName="Main">
       <MainStack.Screen
         name="Volume"
+        options={{headerShown: false}}
         component={VolumeScreen}
       />
       <MainStack.Screen

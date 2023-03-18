@@ -1,15 +1,21 @@
-import {useState} from "react";
-import {TextInput, View, StyleSheet, Text, Button} from "react-native";
+import React, {useEffect, useState} from "react";
+import {View, StyleSheet, Dimensions} from "react-native";
 import {BottomTabScreenProps} from "@react-navigation/bottom-tabs";
 import {MainStackParamList} from "../navigation/MainNavigator";
+import {TextInput, Button, Text} from "react-native-paper";
+import VerticalSpace from "../components/VerticalSpace";
+import Row from "../components/Row";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type Props = BottomTabScreenProps<MainStackParamList, 'Volume'>;
 
 export default function VolumeScreen({navigation}: Props) {
-  const [height, setHeight] = useState<string>("5");
-  const [width, setWidth] = useState<string>("5");
-  const [length, setLength] = useState<string>("5");
-  const [volume, setVolume] = useState<number>(0.000125);
+  const [height, setHeight] = useState<string>();
+  const [width, setWidth] = useState<string>();
+  const [length, setLength] = useState<string>();
+  const [volume, setVolume] = useState<number>();
+
+  const {top} = useSafeAreaInsets();
 
   const handleHeightInput = (value: string) => {
     setHeight((prevNum) => {
@@ -47,83 +53,49 @@ export default function VolumeScreen({navigation}: Props) {
     });
   };
 
-
   const handleClearAll = () => {
-    setHeight("1");
-    setWidth("1");
-    setLength("1");
-    setVolume(0.000125);
+    setHeight(undefined);
+    setWidth(undefined);
+    setLength(undefined);
+    setVolume(0);
   };
 
-  const calculateVolume = () => {
+  useEffect(() => {
     if (height !== undefined && width !== undefined && length !== undefined) {
       setVolume(parseFloat(height) * parseFloat(width) * parseFloat(length) * 0.000001);
-    } else {
-      setVolume(0.000125);
     }
-  };
-
+  }, [height, width, length]);
 
   return (
     <View style={styles.container}>
-      <View style={styles.button}>
+      <VerticalSpace height={top + 32} />
+      <Text style={styles.title} variant="headlineLarge">Введите размеры коробки</Text>
+      <VerticalSpace height={16}/>
+      <TextInput onChangeText={setHeight} keyboardType={'numeric'} value={height} placeholder={'15'} mode={'outlined'} style={styles.input}
+                 label={'Высота'}/>
+      <VerticalSpace height={16}/>
+      <TextInput onChangeText={setWidth} keyboardType={'numeric'} value={width} placeholder={'15'} mode={'outlined'} style={styles.input}
+                 label={'Ширина'}/>
+      <VerticalSpace height={16}/>
+      <TextInput onChangeText={setLength} keyboardType={'numeric'} value={length} placeholder={'15'} mode={'outlined'} style={styles.input}
+                 label={'Длина'}/>
+      <VerticalSpace height={16}/>
+      <Text style={styles.title} variant="headlineLarge">{volume ? `${volume.toFixed(3)}m3` : 'Введите размеры'}</Text>
+      <Row style={styles.buttonsContainer}>
         <Button
-          title="ClearAll"
+          icon={'close'}
+          mode={'contained'}
           onPress={handleClearAll}
-        />
-      </View>
-      <View style={styles.inputView}>
-        <Text style={styles.unit}>высота</Text>
-        <TextInput
-          style={styles.input}
-          autoFocus={true}
-          value={height}
-          onChangeText={handleHeightInput}
-          keyboardType="numeric"
-          returnKeyType="done"
-        />
-        <Text style={styles.unit}>cм</Text>
-      </View>
-      <View style={styles.inputView}>
-        <Text style={styles.unit}>ширина</Text>
-        <TextInput
-          style={styles.input}
-          value={width}
-          onChangeText={handleWidthInput}
-          keyboardType="numeric"
-          returnKeyType="done"
-        />
-        <Text style={styles.unit}>cм</Text>
-      </View>
-      <View style={styles.inputView}>
-        <Text style={styles.unit}>длинна</Text>
-        <TextInput
-          style={styles.input}
-          value={length}
-          onChangeText={handleLengthInput}
-          keyboardType="numeric"
-          returnKeyType="done"
-        />
-        <Text style={styles.unit}>cм</Text>
-      </View>
-      <View style={styles.inputView}>
-        <Text style={styles.input}>
-          {!isNaN(volume as number) ? volume : ""}
-          <Text style={styles.unit}>м3</Text>
-        </Text>
-      </View>
-      <View style={styles.button}>
+        >ClearAll</Button>
         <Button
-          title="Submit"
+          mode={'contained'}
           onPress={() => {
-            calculateVolume();
             navigation.navigate('Weight', {
               volume
             });
           }}
-        />
-      </View>
-      <Text style={styles.message}>Введите вес посылки</Text>
+        >Next</Button>
+      </Row>
     </View>
   );
 }
@@ -131,9 +103,11 @@ export default function VolumeScreen({navigation}: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: -300,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#fff',
+    paddingHorizontal: 16,
+  },
+  title: {
+    textAlign: 'center',
   },
   inputView: {
     backgroundColor: "#ddd",
@@ -146,10 +120,7 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   input: {
-    margin: 10,
-    flex: 1,
-    color: "#0C1F1F",
-    textAlign: "right",
+    width: '100%'
   },
   unit: {
     marginHorizontal: 5,
@@ -167,5 +138,10 @@ const styles = StyleSheet.create({
   message: {
     fontSize: 30,
     opacity: 0.5,
+  },
+  buttonsContainer: {
+    padding: 16,
+    width: Dimensions.get('window').width - 48,
+    justifyContent: 'space-around',
   }
 });
