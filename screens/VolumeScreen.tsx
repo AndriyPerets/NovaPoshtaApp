@@ -1,16 +1,16 @@
 import React, {useContext, useEffect, useState} from "react";
 import {View, StyleSheet, Dimensions} from "react-native";
-import {BottomTabScreenProps} from "@react-navigation/bottom-tabs";
 import {MainStackParamList} from "../navigation/MainNavigator";
 import {TextInput, Button, Text} from "react-native-paper";
 import VerticalSpace from "../components/VerticalSpace";
 import Row from "../components/Row";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {DimensionsContext} from "../App";
+import {StackScreenProps} from "@react-navigation/stack";
 
-type Props = BottomTabScreenProps<MainStackParamList, 'Volume'>;
+type Props = StackScreenProps<MainStackParamList, 'Volume'>;
 
-export default function VolumeScreen({navigation}: Props) {
+const VolumeScreen = ({navigation}: Props) => {
   const [height, setHeight] = useState<string>();
   const [width, setWidth] = useState<string>();
   const [length, setLength] = useState<string>();
@@ -102,6 +102,8 @@ export default function VolumeScreen({navigation}: Props) {
     </View>
   );
 }
+
+export default VolumeScreen;
 
 const styles = StyleSheet.create({
   container: {

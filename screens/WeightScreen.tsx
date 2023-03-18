@@ -1,13 +1,11 @@
-import {useEffect, useState} from "react";
-import {TextInput, View, StyleSheet, Text, Button, ActivityIndicator, Pressable, ScrollView} from "react-native";
+import {useCallback, useContext, useEffect, useState} from "react";
+import {TextInput, View, StyleSheet, Text, ActivityIndicator, Pressable, ScrollView, Button} from "react-native";
 import RouteScreen from "../screens/RouteScreen";
 import {BottomTabScreenProps} from "@react-navigation/bottom-tabs";
 import {MainStackParamList} from "../navigation/MainNavigator";
 import VerticalSpace from "../components/VerticalSpace";
-import {CargoType, listCargoTypes} from "../API/dictionaries";
-import {useQuery} from "react-query";
-import {NovaPoshtaResponse} from "../API/API";
-import {useCargoTypes} from "../queries/dictionaries";
+import {DimensionsContext} from "../App";
+import {Button as PButton} from "react-native-paper";
 
 type Props = BottomTabScreenProps<MainStackParamList, 'Weight'>;
 
@@ -15,9 +13,8 @@ export default function WeightScreen({navigation}: Props) {
   const [weight, setWeight] = useState("0.1");
   const [serviceType, setServiceType] = useState("WarehouseWarehouse");
   const [cost, setCost] = useState("300");
-  const [cargoType, setCargoType] = useState<CargoType>();
   const [placesAmount, setPlacesAmount] = useState("1");
-  const cargoTypes = useCargoTypes()
+  const {cargoType, setCargoType} = useContext(DimensionsContext)
 
   // const cargoTypes = useQuery<CargoType[], any, CargoType[]>('cargoTypes', async () => {
   //   const cargoTypesResponse = await listCargoTypes();
@@ -51,7 +48,7 @@ export default function WeightScreen({navigation}: Props) {
   //       if (cargoTypesResponse.warnings.length > 0) {
   //         setError(cargoTypesResponse.warnings[0])
   //       }
-  //       if (cargoTypesResponse.info.length > 0) {
+  //       if (cargoTypesResponse.info.len12gth > 0) {
   //         setError(cargoTypesResponse.info[0])
   //       }
   //     }
@@ -68,9 +65,13 @@ export default function WeightScreen({navigation}: Props) {
     setPlacesAmount("1")
   };
 
+  const goToCargoTypeScreen = useCallback(
+    () => navigation.navigate('ChooseCargoTypeScreen'),
+    [])
+
   return (
     <ScrollView style={styles.container}>
-      <VerticalSpace height={200} />
+      <VerticalSpace height={200}/>
       <View style={styles.button}>
         <Button
           title="ClearAll"
@@ -108,17 +109,8 @@ export default function WeightScreen({navigation}: Props) {
         />
         <Text style={styles.unit}>грн</Text>
       </View>
-      <View style={styles.inputViewCargo}>
-        <Text style={styles.unit}>тип груза</Text>
-        {cargoType && <Text>{`Юзер выбрал ${cargoType?.Description}`}</Text>}
-        {cargoTypes.isLoading ? <ActivityIndicator /> : !cargoTypes.error && cargoTypes.data?.map(cargoTypeListItem => {
-          return (<Pressable onPress={() => setCargoType(cargoTypeListItem)} style={styles.cargoItem} key={cargoTypeListItem.Ref}>
-            <Text>{cargoTypeListItem.Ref}</Text>
-          </Pressable>)
-        })}
-        {cargoTypes.error && <Text>{cargoTypes.error}</Text>}
-        <Text style={styles.unit}> </Text>
-      </View>
+      <PButton mode={'contained'}
+               onPress={goToCargoTypeScreen}>{cargoType ? `Тип груза: ${cargoType.Description}` : 'Нажмие чтобы выбрать тип груза'}</PButton>
       <View style={styles.inputView}>
         <Text style={styles.unit}>к-во мест</Text>
         <TextInput
@@ -136,15 +128,12 @@ export default function WeightScreen({navigation}: Props) {
           disabled={!cargoType}
           title="Submit"
           onPress={() => {
-            if (cargoType) {
-              navigation.navigate('Route', {
-                weight: parseFloat(weight),
-                serviceType,
-                cost: parseFloat(cost),
-                cargoType,
-                placesAmount: parseInt(placesAmount),
-              });
-            }
+            navigation.navigate('Route', {
+              weight: parseFloat(weight),
+              serviceType,
+              cost: parseFloat(cost),
+              placesAmount: parseInt(placesAmount),
+            });
           }}
 
         />
@@ -176,14 +165,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 2,
     opacity: 0.9,
-  },
-  cargoItem: {
-    height: 48,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    marginBottom: 4,
   },
   input: {
     margin: 10,

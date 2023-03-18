@@ -1,12 +1,12 @@
 import {Alert, Button, StyleSheet, Text, TextInput, View} from 'react-native';
 import React, {useContext, useEffect, useState} from "react";
 import axios from 'axios';
-import {BottomTabScreenProps} from "@react-navigation/bottom-tabs";
 import {MainStackParamList} from "../navigation/MainNavigator";
 import {DimensionsContext} from "../App";
 import {API_KEY, API_URL} from "../constants";
+import {StackScreenProps} from "@react-navigation/stack";
 
-type Props = BottomTabScreenProps<MainStackParamList, 'Route'>;
+type Props = StackScreenProps<MainStackParamList, 'Route'>;
 
 export default function RouteScreen({route}: Props) {
   const [citySenderRef, setCitySenderRef] = useState<string>("");
@@ -14,7 +14,8 @@ export default function RouteScreen({route}: Props) {
   const [cityNameSender, setCityNameSender] = useState("Киев");
   const [cityNameRecipient, setCityNameRecipient] = useState("Львов");
   const [result, setResult] = useState("");
-  const {weight, serviceType, cargoType, placesAmount, cost} = route.params;
+  const {weight, serviceType, placesAmount, cost} = route.params;
+  const {cargoType} = useContext(DimensionsContext)
 
   const {volume} = useContext(DimensionsContext)
 
@@ -32,7 +33,7 @@ export default function RouteScreen({route}: Props) {
       Weight: weight,
       ServiceType: serviceType,
       Cost: cost,
-      CargoType: cargoType,
+      CargoType: cargoType?.Description,
       SeatsAmount: placesAmount,
       VolumeGeneral: volume,
     };
