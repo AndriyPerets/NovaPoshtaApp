@@ -2,7 +2,7 @@ import {StyleSheet, Text, ActivityIndicator, Pressable, FlatList, ListRenderItem
 import React, {useCallback, useContext} from "react";
 import {MainStackParamList} from "../navigation/MainNavigator";
 import {useCargoTypes} from "../queries/dictionaries";
-import {DimensionsContext} from "../App";
+import {DimensionsContext} from "../AppContext";
 import {CargoType} from "../API/dictionaries";
 import {StackScreenProps} from "@react-navigation/stack";
 import VerticalSpace from "../components/VerticalSpace";
@@ -28,7 +28,7 @@ const ChooseCargoTypeScreen = ({navigation}: Props) => {
 
   return (
       <>
-        <VerticalSpace height={top + 32} />
+        <VerticalSpace height={top + 64} />
         {cargoTypes.isLoading ? (
             <ActivityIndicator />
         ) : (

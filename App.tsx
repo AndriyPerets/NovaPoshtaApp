@@ -1,9 +1,10 @@
 import {Dimensions, ImageBackground, StyleSheet} from "react-native";
 import {DefaultTheme, NavigationContainer} from "@react-navigation/native";
-import React, {createContext, useState} from "react";
+import React, {useState} from "react";
 import MainStackNavigator from "./navigation/MainNavigator";
 import {QueryClient, QueryClientProvider} from "react-query";
 import {CargoType, ServiceType} from "./API/dictionaries";
+import { DimensionsContext } from "./AppContext";
 
 //пользовательская тема
 const navTheme = {
@@ -14,37 +15,7 @@ const navTheme = {
   },
 };
 
-//тип данных TypeScript для объекта контекста (DimensionsContext)
-interface DimensionsContextProps {
-  volume?: number;
-  setVolume: (volume?: number) => void;
-  cargoType?: CargoType;
-  setCargoType: (cargoType?: CargoType) => void;
-  serviceType?: ServiceType;
-  setServiceType: (serviceType?: ServiceType) => void;
-  weight?: number;
-  setWeight: (weight?: number) => void;
-  cost?: number;
-  setCost: (cost?: number) => void;
-  placesAmount?: number;
-  setPlacesAmount?: (placesAmount: number) => void;
-}
 
-// экспортируемый объект контекста (DimensionsContext)
-export const DimensionsContext = createContext<DimensionsContextProps>({ //экспортируемый объект контекста (DimensionsContext)
-  setVolume: () => {},
-  volume: undefined,
-  setCargoType: () => {},
-  cargoType: undefined,
-  setServiceType: () => {},
-  serviceType: undefined,
-  setWeight: () => {},
-  weight: undefined,
-  setCost: () => {},
-  cost: undefined,
-  setPlacesAmount: () => {},
-  placesAmount: undefined,
-});
 
 const queryClient = new QueryClient()
 
@@ -52,9 +23,9 @@ export default function App() {
   const [volume, setVolume] = useState<number>();
   const [cargoType, setCargoType] = useState<CargoType>();
   const [serviceType, setServiceType] = useState<ServiceType>();
-  const [weight, setWeight] = useState<number>();
-  const [cost, setCost] = useState<number>();
-  const [placesAmount, setPlacesAmount] = useState<number>();
+  const [weight, setWeight] = useState<string>();
+  const [cost, setCost] = useState<string>();
+  const [placesAmount, setPlacesAmount] = useState<string>();
 
 
   return (

@@ -2,7 +2,7 @@ import {StyleSheet, Text, ActivityIndicator, Pressable, FlatList, ListRenderItem
 import React, {useCallback, useContext} from "react";
 import {MainStackParamList} from "../navigation/MainNavigator";
 import {useServiceTypes} from "../queries/dictionaries";
-import {DimensionsContext} from "../App";
+import {DimensionsContext} from "../AppContext";
 import { ServiceType} from "../API/dictionaries";
 import {StackScreenProps} from "@react-navigation/stack";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
@@ -27,7 +27,7 @@ const ChooseServiceTypeScreen = ({navigation}: Props) => {
 
     return (
         <>
-            <VerticalSpace height={top +32}/>
+            <VerticalSpace height={top +64}/>
             {serviceTypes.isLoading ? (<ActivityIndicator/>) :
                 (<FlatList
                         data={serviceTypes.data}

@@ -5,7 +5,7 @@ import {TextInput, Button, Text} from "react-native-paper";
 import VerticalSpace from "../components/VerticalSpace";
 import Row from "../components/Row";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import {DimensionsContext} from "../App";
+import {DimensionsContext} from "../AppContext";
 import {StackScreenProps} from "@react-navigation/stack";
 
 type Props = StackScreenProps<MainStackParamList, 'Volume'>;

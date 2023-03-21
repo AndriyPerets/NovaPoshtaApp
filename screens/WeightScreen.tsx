@@ -2,7 +2,7 @@ import React, {useCallback, useContext} from "react";
 import { StyleSheet, ScrollView, Dimensions} from "react-native";
 import {MainStackParamList} from "../navigation/MainNavigator";
 import VerticalSpace from "../components/VerticalSpace";
-import {DimensionsContext} from "../App";
+import {DimensionsContext} from "../AppContext";
 import {Button, TextInput, Text} from "react-native-paper";
 import {StackScreenProps} from "@react-navigation/stack";
 import Row from "../components/Row";
@@ -78,28 +78,13 @@ export default function WeightScreen({navigation}: Props) {
       <VerticalSpace height={top + 32} />
       <Text style={styles.title} variant="headlineLarge">Заполните поля</Text>
       <VerticalSpace height={16}/>
-      <TextInput autoFocus   onChangeText={(text) => {
-          const weight = parseFloat(text);
-          if (!isNaN(weight)) {
-              setWeight(weight);
-          }
-      }} returnKeyType={'done'} keyboardType={'numeric'} value={weight?.toString()} placeholder={'1'} mode={'outlined'} style={styles.input}
+      <TextInput autoFocus   onChangeText={setWeight} returnKeyType={'done'} keyboardType={'numeric'} value={weight} placeholder={'1'} mode={'outlined'} style={styles.input}
                  label={'Вес'}/>
       <VerticalSpace height={16}/>
-      <TextInput  onChangeText={(text)=>{
-          const cost = parseFloat(text);
-          if (isNaN(cost)){
-              setCost(cost)
-          }
-      }} returnKeyType={'done'} keyboardType={'numeric'} value={cost?.toString()} placeholder={'300'} mode={'outlined'} style={styles.input}
+      <TextInput  onChangeText={setCost} returnKeyType={'done'} keyboardType={'numeric'} value={cost} placeholder={'300'} mode={'outlined'} style={styles.input}
                  label={'Оценочная стоимость'}/>
       <VerticalSpace height={16}/>
-      <TextInput  onChangeText={(text)=>{
-          const placesAmount = parseFloat(text);
-          if (isNaN(placesAmount)){
-              setPlacesAmount(placesAmount)
-          }
-      }} returnKeyType={'done'} keyboardType={'numeric'}   value={placesAmount?.toString()} placeholder={'1'} mode={'outlined'} style={styles.input}
+      <TextInput  onChangeText={setPlacesAmount} returnKeyType={'done'} keyboardType={'numeric'}   value={placesAmount} placeholder={'1'} mode={'outlined'} style={styles.input}
                  label={'Количество мест'}/>
       <VerticalSpace height={16}/>
       <Button mode={'contained'}
