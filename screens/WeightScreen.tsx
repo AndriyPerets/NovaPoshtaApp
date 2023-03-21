@@ -1,20 +1,20 @@
-import {useCallback, useContext, useEffect, useState} from "react";
-import {TextInput, View, StyleSheet, Text, ActivityIndicator, Pressable, ScrollView, Button} from "react-native";
-import RouteScreen from "../screens/RouteScreen";
-import {BottomTabScreenProps} from "@react-navigation/bottom-tabs";
+import React, {useCallback, useContext} from "react";
+import { StyleSheet, ScrollView, Dimensions} from "react-native";
 import {MainStackParamList} from "../navigation/MainNavigator";
 import VerticalSpace from "../components/VerticalSpace";
 import {DimensionsContext} from "../App";
-import {Button as PButton} from "react-native-paper";
+import {Button, TextInput, Text} from "react-native-paper";
+import {StackScreenProps} from "@react-navigation/stack";
+import Row from "../components/Row";
+import {useSafeAreaInsets} from "react-native-safe-area-context";
 
-type Props = BottomTabScreenProps<MainStackParamList, 'Weight'>;
+type Props = StackScreenProps<MainStackParamList, 'Weight'>;
 
 export default function WeightScreen({navigation}: Props) {
-  const [weight, setWeight] = useState("0.1");
-  const [serviceType, setServiceType] = useState("WarehouseWarehouse");
-  const [cost, setCost] = useState("300");
-  const [placesAmount, setPlacesAmount] = useState("1");
-  const {cargoType, setCargoType} = useContext(DimensionsContext)
+  const {weight, setWeight, serviceType, setServiceType, cost, setCost, cargoType, setCargoType, placesAmount, setPlacesAmount} = useContext(DimensionsContext);
+
+  const {top} = useSafeAreaInsets();
+
 
   // const cargoTypes = useQuery<CargoType[], any, CargoType[]>('cargoTypes', async () => {
   //   const cargoTypesResponse = await listCargoTypes();
@@ -58,87 +58,78 @@ export default function WeightScreen({navigation}: Props) {
   // }, []);
 
   const handleClearAll = () => {
-    setWeight("0.1");
-    setServiceType("WarehouseWarehouse");
-    setCost("300");
+    setWeight(undefined);
+    setServiceType(undefined);
+    setCost(undefined);
     setCargoType(undefined);
-    setPlacesAmount("1")
+    setPlacesAmount(undefined)
   };
 
   const goToCargoTypeScreen = useCallback(
     () => navigation.navigate('ChooseCargoTypeScreen'),
-    [])
+    []);
+
+  const goToServiceTypeScreen = useCallback(
+      () => navigation.navigate('ChooseServiceTypeScreen'),
+      []);
 
   return (
     <ScrollView style={styles.container}>
-      <VerticalSpace height={200}/>
-      <View style={styles.button}>
+      <VerticalSpace height={top + 32} />
+      <Text style={styles.title} variant="headlineLarge">Заполните поля</Text>
+      <VerticalSpace height={16}/>
+      <TextInput autoFocus   onChangeText={(text) => {
+          const weight = parseFloat(text);
+          if (!isNaN(weight)) {
+              setWeight(weight);
+          }
+      }} returnKeyType={'done'} keyboardType={'numeric'} value={weight?.toString()} placeholder={'1'} mode={'outlined'} style={styles.input}
+                 label={'Вес'}/>
+      <VerticalSpace height={16}/>
+      <TextInput  onChangeText={(text)=>{
+          const cost = parseFloat(text);
+          if (isNaN(cost)){
+              setCost(cost)
+          }
+      }} returnKeyType={'done'} keyboardType={'numeric'} value={cost?.toString()} placeholder={'300'} mode={'outlined'} style={styles.input}
+                 label={'Оценочная стоимость'}/>
+      <VerticalSpace height={16}/>
+      <TextInput  onChangeText={(text)=>{
+          const placesAmount = parseFloat(text);
+          if (isNaN(placesAmount)){
+              setPlacesAmount(placesAmount)
+          }
+      }} returnKeyType={'done'} keyboardType={'numeric'}   value={placesAmount?.toString()} placeholder={'1'} mode={'outlined'} style={styles.input}
+                 label={'Количество мест'}/>
+      <VerticalSpace height={16}/>
+      <Button mode={'contained'}
+      onPress={goToServiceTypeScreen}>{serviceType ? `Тип услуги: ${serviceType.Description}` : `Нажмите, чтобы выбрать тип услуги`}</Button>
+      <VerticalSpace height={16}/>
+      <Button mode={'contained'}
+               onPress={goToCargoTypeScreen}>{cargoType ? `Тип груза: ${cargoType.Description}` : 'Нажмите, чтобы выбрать тип груза'}</Button>
+      <VerticalSpace height={16}/>
+      <Row style={styles.buttonsContainer}>
         <Button
-          title="ClearAll"
-          onPress={handleClearAll}
-        />
-      </View>
-      <View style={styles.inputView}>
-        <Text style={styles.unit}>вес</Text>
-        <TextInput
-          style={styles.input}
-          autoFocus={true}
-          value={weight}
-          onChangeText={(text) => setWeight(text)}
-          keyboardType="numeric"
-        />
-        <Text style={styles.unit}>кг</Text>
-      </View>
-      <View style={styles.inputView}>
-        <Text style={styles.unit}>тип услуги</Text>
-        <TextInput
-          style={styles.input}
-          value={serviceType}
-          onChangeText={(text) => setServiceType(text)}
-          keyboardType="numeric"
-        />
-        <Text style={styles.unit}> </Text>
-      </View>
-      <View style={styles.inputView}>
-        <Text style={styles.unit}>оценочная стоимость</Text>
-        <TextInput
-          style={styles.input}
-          value={cost}
-          onChangeText={(text) => setCost(text)}
-          keyboardType="numeric"
-        />
-        <Text style={styles.unit}>грн</Text>
-      </View>
-      <PButton mode={'contained'}
-               onPress={goToCargoTypeScreen}>{cargoType ? `Тип груза: ${cargoType.Description}` : 'Нажмие чтобы выбрать тип груза'}</PButton>
-      <View style={styles.inputView}>
-        <Text style={styles.unit}>к-во мест</Text>
-        <TextInput
-          style={styles.input}
-          autoFocus={true}
-          value={placesAmount}
-          onChangeText={(text) => setPlacesAmount(text)}
-          keyboardType="number-pad"
-          returnKeyType="done"
-        />
-        <Text style={styles.unit}> </Text>
-      </View>
-      <View style={styles.button}>
+            icon={'close'}
+            mode={'contained'}
+            onPress={handleClearAll}
+        >ClearAll</Button>
         <Button
           disabled={!cargoType}
-          title="Submit"
+          mode={'contained'}
           onPress={() => {
-            navigation.navigate('Route', {
-              weight: parseFloat(weight),
-              serviceType,
-              cost: parseFloat(cost),
-              placesAmount: parseInt(placesAmount),
-            });
-          }}
+              if(cargoType) {
+                  navigation.navigate('Route');
+              }
+              }}
+              // weight: parseFloat(weight),
+              // serviceType,
+              // cost: parseFloat(cost),
+              // placesAmount: parseInt(placesAmount),
+            // });
 
-        />
-      </View>
-      <Text style={styles.message}>Введите вес посылки</Text>
+        >Next</Button>
+      </Row>
     </ScrollView>
   );
 }
@@ -146,47 +137,17 @@ export default function WeightScreen({navigation}: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  inputView: {
-    backgroundColor: "#ddd",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderRadius: 10,
-    margin: 2,
-    opacity: 0.9,
-  },
-  inputViewCargo: {
-    backgroundColor: "#ddd",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderRadius: 10,
-    margin: 2,
-    opacity: 0.9,
+    paddingHorizontal: 16,
   },
   input: {
-    margin: 10,
-    flex: 1,
-    color: "#0C1F1F",
-    textAlign: "right",
+    width: '100%',
   },
-  unit: {
-    marginHorizontal: 5,
-    color: "#0C1F1F",
+  buttonsContainer: {
+    padding: 16,
+    width: Dimensions.get('window').width - 48,
+    justifyContent: 'space-around',
   },
-  button: {
-    backgroundColor: '#ddd',
-    color: '#FFFFFF',
-    padding: 5,
-    borderRadius: 10,
-    margin: 5,
-    borderWidth: 1,
-    opacity: 0.9,
+  title: {
+    textAlign: 'center',
   },
-  message: {
-    fontSize: 30,
-    opacity: 0.5,
-  }
 });

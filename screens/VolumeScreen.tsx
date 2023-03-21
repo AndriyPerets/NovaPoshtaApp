@@ -19,41 +19,41 @@ const VolumeScreen = ({navigation}: Props) => {
 
   const {top} = useSafeAreaInsets();
 
-  const handleHeightInput = (value: string) => {
-    setHeight((prevNum) => {
-      const newValue = value.trim();
-      // проверка на допустимые символы в числе
-      const validChars = /^[0-9]*\.?[0-9]*$/;
-      if (!validChars.test(newValue)) {
-        return prevNum;
-      }
-      return newValue;
-    });
-  };
+  // const handleHeightInput = (value: string) => {
+  //   setHeight((prevNum) => {
+  //     const newValue = value.trim();
+  //     // проверка на допустимые символы в числе
+  //     const validChars = /^[0-9]*\.?[0-9]*$/;
+  //     if (!validChars.test(newValue)) {
+  //       return prevNum;
+  //     }
+  //     return newValue;
+  //   });
+  // };
 
-  const handleWidthInput = (value: string) => {
-    setWidth((prevNum) => {
-      const newValue = value.trim();
-      // проверка на допустимые символы в числе
-      const validChars = /^[0-9]*\.?[0-9]*$/;
-      if (!validChars.test(newValue)) {
-        return prevNum;
-      }
-      return newValue;
-    });
-  };
+  // const handleWidthInput = (value: string) => {
+  //   setWidth((prevNum) => {
+  //     const newValue = value.trim();
+  //     // проверка на допустимые символы в числе
+  //     const validChars = /^[0-9]*\.?[0-9]*$/;
+  //     if (!validChars.test(newValue)) {
+  //       return prevNum;
+  //     }
+  //     return newValue;
+  //   });
+  // };
 
-  const handleLengthInput = (value: string) => {
-    setLength((prevNum) => {
-      const newValue = value.trim();
-      // проверка на допустимые символы в числе
-      const validChars = /^[0-9]*\.?[0-9]*$/;
-      if (!validChars.test(newValue)) {
-        return prevNum;
-      }
-      return newValue;
-    });
-  };
+  // const handleLengthInput = (value: string) => {
+  //   setLength((prevNum) => {
+  //     const newValue = value.trim();
+  //     // проверка на допустимые символы в числе
+  //     const validChars = /^[0-9]*\.?[0-9]*$/;
+  //     if (!validChars.test(newValue)) {
+  //       return prevNum;
+  //     }
+  //     return newValue;
+  //   });
+  // };
 
   const handleClearAll = () => {
     setHeight(undefined);
@@ -113,35 +113,8 @@ const styles = StyleSheet.create({
   title: {
     textAlign: 'center',
   },
-  inputView: {
-    backgroundColor: "#ddd",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderRadius: 10,
-    margin: 2,
-    opacity: 0.8,
-  },
   input: {
     width: '100%'
-  },
-  unit: {
-    marginHorizontal: 5,
-    color: "#0C1F1F",
-  },
-  button: {
-    backgroundColor: '#ddd',
-    color: '#FFFFFF',
-    padding: 5,
-    borderRadius: 10,
-    margin: 5,
-    borderWidth: 1,
-    opacity: 0.9,
-  },
-  message: {
-    fontSize: 30,
-    opacity: 0.5,
   },
   buttonsContainer: {
     padding: 16,

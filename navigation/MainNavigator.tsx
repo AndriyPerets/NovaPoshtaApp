@@ -3,20 +3,22 @@ import WeightScreen from "../screens/WeightScreen";
 import RouteScreen from "../screens/RouteScreen";
 import {createStackNavigator} from "@react-navigation/stack";
 import ResultScreen from "../screens/ResultScreen";
-import {CargoType} from "../API/dictionaries";
 import ChooseCargoTypeScreen from "../screens/ChooseCargoTypeScreen";
+import ChooseServiceTypeScreen from "../screens/ChooseServiceTypeScreen";
+
 
 export type MainStackParamList = {
   Main: undefined;
   ChooseCargoTypeScreen: undefined;
+  ChooseServiceTypeScreen: undefined;
   Volume: undefined;
   Weight: undefined;
-  Route: {
-    weight: number;
-    serviceType: string;
-    cost: number;
-    placesAmount: number;
-  };
+  Route: undefined
+    // weight: number;
+    // serviceType: string;
+    // cost: number;
+    // placesAmount: number;
+
   Result: {
     result: string;
   };
@@ -40,15 +42,23 @@ const MainStackNavigator = () => {
       />
       <MainStack.Screen
         name="Route"
+        options={{headerTransparent: true}}
         component={RouteScreen}
       />
       <MainStack.Screen
           name="Result"
+          options={{headerTransparent: true}}
           component={ResultScreen}
       />
       <MainStack.Screen
           name="ChooseCargoTypeScreen"
+          options={{headerTransparent: true}}
           component={ChooseCargoTypeScreen}
+      />
+      <MainStack.Screen
+          name="ChooseServiceTypeScreen"
+          options={{headerTransparent: true}}
+          component={ChooseServiceTypeScreen}
       />
     </MainStack.Navigator>
   )

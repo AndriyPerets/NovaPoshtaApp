@@ -12,3 +12,16 @@ export const listCargoTypes = async (): Promise<NovaPoshtaResponse<CargoType>> =
     methodProperties: {}
   })
 }
+
+export interface ServiceType {
+  Description: string,
+  Ref: string
+}
+
+export const listServiceTypes = async (): Promise<NovaPoshtaResponse<CargoType>> => {
+  return novaPoshtaRequest({
+    modelName: "Common",
+    calledMethod: "getServiceTypes",
+    methodProperties: {}
+  })
+}
