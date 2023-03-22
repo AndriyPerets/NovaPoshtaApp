@@ -8,7 +8,7 @@ import {StackScreenProps} from "@react-navigation/stack";
 
 type Props = StackScreenProps<MainStackParamList, 'Route'>;
 
-export default function RouteScreen({navigation}: Props) {
+export default function RouteScreen({route, navigation}: Props) {
 // export default function RouteScreen({route}: Props) {
   const [citySenderRef, setCitySenderRef] = useState<string>("");
   const [cityRecipientRef, setCityRecipientRef] = useState<string>("");

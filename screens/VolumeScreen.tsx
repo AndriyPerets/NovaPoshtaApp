@@ -88,16 +88,24 @@ const VolumeScreen = ({navigation}: Props) => {
           icon={'close'}
           mode={'contained'}
           onPress={handleClearAll}
+          style={styles.buttonContent}
         >ClearAll</Button>
-        <Button
-          disabled={!volume}
-          mode={'contained'}
-          onPress={() => {
-            if (volume) {
-              navigation.navigate('Weight');
-            }
-          }}
-        >Next</Button>
+          <Button
+              disabled={!volume}
+              mode={'contained'}
+              onPress={() => {
+                  if (volume) {
+                      navigation.navigate('Weight');
+                  }
+              }}
+              contentStyle={{
+                  ...styles.buttonContent,
+                  opacity: !volume ? 0.8 : 1,
+              }}
+              labelStyle={styles.buttonLabel}
+          >
+              Next
+          </Button>
       </Row>
     </View>
   );
@@ -112,13 +120,24 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: 'center',
+      opacity:0.6
   },
   input: {
-    width: '100%'
+    width: '100%',
+    backgroundColor: "#ddd",
+    opacity:0.9,
   },
   buttonsContainer: {
     padding: 16,
-    width: Dimensions.get('window').width - 48,
+    width: Dimensions.get('window').width - 28,
     justifyContent: 'space-around',
-  }
+  },
+    buttonContent: {
+        backgroundColor: '#61469E',
+        opacity: 0.8,
+    },
+    buttonLabel: {
+        color: 'white',
+        fontSize: 18,
+    },
 });

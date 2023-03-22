@@ -3,7 +3,7 @@ import { StyleSheet, ScrollView, Dimensions} from "react-native";
 import {MainStackParamList} from "../navigation/MainNavigator";
 import VerticalSpace from "../components/VerticalSpace";
 import {DimensionsContext} from "../AppContext";
-import {Button, TextInput, Text} from "react-native-paper";
+import {Button, TextInput, Text, DefaultTheme} from "react-native-paper";
 import {StackScreenProps} from "@react-navigation/stack";
 import Row from "../components/Row";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
@@ -15,6 +15,10 @@ export default function WeightScreen({navigation}: Props) {
 
   const {top} = useSafeAreaInsets();
 
+    const inputTheme = {
+        ...DefaultTheme,
+        roundness: 60,
+    };
 
   // const cargoTypes = useQuery<CargoType[], any, CargoType[]>('cargoTypes', async () => {
   //   const cargoTypesResponse = await listCargoTypes();
@@ -79,18 +83,24 @@ export default function WeightScreen({navigation}: Props) {
       <Text style={styles.title} variant="headlineLarge">Заполните поля</Text>
       <VerticalSpace height={16}/>
       <TextInput autoFocus   onChangeText={setWeight} returnKeyType={'done'} keyboardType={'numeric'} value={weight} placeholder={'1'} mode={'outlined'} style={styles.input}
-                 label={'Вес'}/>
+                 label={'Вес'} theme={inputTheme}/>
       <VerticalSpace height={16}/>
       <TextInput  onChangeText={setCost} returnKeyType={'done'} keyboardType={'numeric'} value={cost} placeholder={'300'} mode={'outlined'} style={styles.input}
-                 label={'Оценочная стоимость'}/>
+                 label={'Оценочная стоимость'} theme={inputTheme}/>
       <VerticalSpace height={16}/>
       <TextInput  onChangeText={setPlacesAmount} returnKeyType={'done'} keyboardType={'numeric'}   value={placesAmount} placeholder={'1'} mode={'outlined'} style={styles.input}
-                 label={'Количество мест'}/>
-      <VerticalSpace height={16}/>
-      <Button mode={'contained'}
+                 label={'Количество мест'} theme={inputTheme}/>
+      <VerticalSpace height={24}/>
+      <Button mode={'contained'} style={{
+          ...styles.buttonContent,
+          opacity: !serviceType ? 0.8 : 1,
+      }}
       onPress={goToServiceTypeScreen}>{serviceType ? `Тип услуги: ${serviceType.Description}` : `Нажмите, чтобы выбрать тип услуги`}</Button>
-      <VerticalSpace height={16}/>
-      <Button mode={'contained'}
+      <VerticalSpace height={24}/>
+      <Button mode={'contained'} style={{
+          ...styles.buttonContent,
+          opacity: !cargoType ? 0.8 : 1,
+      }}
                onPress={goToCargoTypeScreen}>{cargoType ? `Тип груза: ${cargoType.Description}` : 'Нажмите, чтобы выбрать тип груза'}</Button>
       <VerticalSpace height={16}/>
       <Row style={styles.buttonsContainer}>
@@ -98,6 +108,7 @@ export default function WeightScreen({navigation}: Props) {
             icon={'close'}
             mode={'contained'}
             onPress={handleClearAll}
+            style={styles.buttonContent}
         >ClearAll</Button>
         <Button
           disabled={!cargoType}
@@ -107,12 +118,11 @@ export default function WeightScreen({navigation}: Props) {
                   navigation.navigate('Route');
               }
               }}
-              // weight: parseFloat(weight),
-              // serviceType,
-              // cost: parseFloat(cost),
-              // placesAmount: parseInt(placesAmount),
-            // });
-
+          contentStyle={{
+              ...styles.buttonContent,
+              opacity: !cargoType ? 0.8 : 1,
+          }}
+          labelStyle={styles.buttonLabel}
         >Next</Button>
       </Row>
     </ScrollView>
@@ -126,6 +136,9 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
+      backgroundColor:'#ddd',
+      opacity:0.9,
+      borderRadius:60,
   },
   buttonsContainer: {
     padding: 16,
@@ -134,5 +147,14 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: 'center',
+      opacity:0.6
   },
+    buttonContent: {
+        backgroundColor: '#61469E',
+        opacity: 0.8,
+    },
+    buttonLabel: {
+        color: 'white',
+        fontSize: 18,
+    },
 });

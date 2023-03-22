@@ -1,4 +1,4 @@
-import {Dimensions, ImageBackground, StyleSheet} from "react-native";
+import {Dimensions, ImageBackground, StyleSheet, View} from "react-native";
 import {DefaultTheme, NavigationContainer} from "@react-navigation/native";
 import React, {useState} from "react";
 import MainStackNavigator from "./navigation/MainNavigator";
@@ -28,26 +28,55 @@ export default function App() {
   const [placesAmount, setPlacesAmount] = useState<string>();
 
 
-  return (
-    <ImageBackground resizeMode={'contain'} style={styles.background} source={require('./assets/novaPost.png')}>
-      <DimensionsContext.Provider value={{volume, setVolume, cargoType, setCargoType, serviceType, setServiceType, weight, setWeight, cost, setCost, placesAmount, setPlacesAmount}}>
-        <QueryClientProvider client={queryClient}>
-          <NavigationContainer theme={navTheme}>
-            <MainStackNavigator/>
-          </NavigationContainer>
-        </QueryClientProvider>
-      </DimensionsContext.Provider>
-    </ImageBackground>
 
+  return (
+      <View style={styles.container}>
+        <ImageBackground
+            resizeMode={'contain'}
+            style={styles.background}
+            source={require('./assets/novaPost.png')}
+        />
+        <DimensionsContext.Provider
+            value={{
+              volume,
+              setVolume,
+              cargoType,
+              setCargoType,
+              serviceType,
+              setServiceType,
+              weight,
+              setWeight,
+              cost,
+              setCost,
+              placesAmount,
+              setPlacesAmount,
+            }}
+        >
+          <QueryClientProvider client={queryClient}>
+            <NavigationContainer theme={navTheme}>
+              <MainStackNavigator />
+            </NavigationContainer>
+          </QueryClientProvider>
+        </DimensionsContext.Provider>
+      </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   background: {
-    height: Dimensions.get('window').height,
-    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height * 0.5,
+    width: Dimensions.get('window').width * 0.5,
+    alignSelf: 'center',
+    position: 'absolute', // position the image behind the content
   },
 });
+
+
+
+
 
 
 
