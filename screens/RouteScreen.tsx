@@ -1,222 +1,140 @@
-import {Alert, Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {StyleSheet, ScrollView, Dimensions, Alert} from "react-native";
 import React, {useContext, useEffect, useState} from "react";
-import axios from 'axios';
 import {MainStackParamList} from "../navigation/MainNavigator";
 import {DimensionsContext} from "../AppContext";
-import {API_KEY, API_URL} from "../constants";
 import {StackScreenProps} from "@react-navigation/stack";
+import VerticalSpace from "../components/VerticalSpace";
+import {Button, TextInput, Text, DefaultTheme} from "react-native-paper";
+import Row from "../components/Row";
+import {useSafeAreaInsets} from "react-native-safe-area-context";
+import {getCityRefByName, routeRequest} from "../API/dictionaries";
+import {useCityRef, useRouteRequest} from "../queries/dictionaries";
+import {RouteProps} from "../API/dictionaries";
+import {novaPoshtaRequest} from "../API/API";
 
 type Props = StackScreenProps<MainStackParamList, 'Route'>;
 
 export default function RouteScreen({route, navigation}: Props) {
-// export default function RouteScreen({route}: Props) {
-  const [citySenderRef, setCitySenderRef] = useState<string>("");
-  const [cityRecipientRef, setCityRecipientRef] = useState<string>("");
-  const [cityNameSender, setCityNameSender] = useState("Киев");
-  const [cityNameRecipient, setCityNameRecipient] = useState("Львов");
-  const [result, setResult] = useState("");
-  // const {weight, serviceType, placesAmount, cost} = route.params;
-  const {cargoType} = useContext(DimensionsContext)
+  const {
+      citySenderRef,
+      setCitySenderRef,
+      cityRecipientRef,
+      setCityRecipientRef,
+      citySenderName,
+      setCitySenderName,
+      cityRecipientName,
+      setCityRecipientName,
+      result,
+      setResult,
+      volume,
+      weight,
+      cost,
+      placesAmount,
+      cargoType,
+      serviceType
+      } = useContext(DimensionsContext);
 
-  const {volume} = useContext(DimensionsContext)
+  const inputTheme = {
+    ...DefaultTheme,
+    roundness: 60,
+  };
 
-  const handleNovaPostRequest = async () => {
-    if (!citySenderRef || !cityRecipientRef) {
-      console.log("City references are not set yet!");
-      return;
+    const { top } = useSafeAreaInsets();
+
+    const routeProps:RouteProps = {
+        CitySender: citySenderRef,
+        CityRecipient: cityRecipientRef,
+        Weight: weight,
+        ServiceType: serviceType,
+        Cost: cost,
+        CargoType: cargoType,
+        SeatsAmount: placesAmount,
+        VolumeGeneral: volume,
     }
 
-    const modelName = "InternetDocument";
-    const calledMethod = "getDocumentPrice";
-    const methodProperties = {
-      CitySender: citySenderRef,
-      CityRecipient: cityRecipientRef,
-      Weight: weight,
-      ServiceType: serviceType,
-      Cost: cost,
-      CargoType: cargoType?.Description,
-      SeatsAmount: placesAmount,
-      VolumeGeneral: volume,
+    const handleSubmit = async () => {
+        if (citySenderName && cityRecipientName) {
+            const citySender = useCityRef(citySenderName);
+            const cityRecipient = useCityRef(cityRecipientName);
+            setCitySenderRef(citySender);
+            setCityRecipientRef(cityRecipient);
+        }
     };
 
-    try {
-      // Make the Nova Poshta API request
-      const response = await axios.post(API_URL, {
-        API_KEY,
-        modelName,
-        calledMethod,
-        methodProperties,
-      });
-      console.log("Nova Poshta API request successful!");
-      console.log("Result data:", response.data);
-      const newResult = response.data?.data?.[0]?.Cost || 0;
-      setResult(JSON.stringify(newResult));
-    } catch (error: any) {
-      console.log("Nova Poshta API request failed!");
-      console.log("Error:", error);
-      Alert.alert("Ошибка", error?.message);
-    }
-  };
+    useEffect (()=> {
+        if(citySenderRef && cityRecipientRef) {
+            const cost = useRouteRequest(routeProps);
+            setResult(cost);
+        }
+    });
 
-
-  const getCitySenderRefByName = async (cityName: string) => {
-    const modelName = "Address";
-    const calledMethod = "searchSettlements";
-    const methodProperties = {
-      CityName: cityName,
-      Limit: 1,
+    const handleClearAll = () => {
+        setCitySenderName();
+        setCityRecipientName();
+        setResult('');
     };
-    try {
-      const response = await axios.post(API_URL, {
-        API_KEY,
-        modelName,
-        calledMethod,
-        methodProperties,
-      });
-      console.log(`Nova Poshta API searchSettlements request for ${cityName} successful!`);
-      console.log("Result data:", response.data);
-      const cityRef = response.data?.data?.[0]?.Addresses?.[0]?.Ref;
-      console.log("CityRef:", cityRef);
-      setCitySenderRef(cityRef);
-      console.log("citySenderRef:", citySenderRef)
-    } catch (error: any) {
-      console.log(`Nova Poshta API searchSettlements request for ${cityName} failed!`);
-      console.log("Error:", error);
-      Alert.alert("Ошибка", error?.message);
-      return null;
-    }
-  };
-  const getCityRecipientRefByName = async (cityName: string) => {
-    const modelName = "Address";
-    const calledMethod = "searchSettlements";
-    const methodProperties = {
-      CityName: cityName,
-      Limit: 1,
-    };
-    try {
-      const response = await axios.post(API_URL, {
-        API_KEY,
-        modelName,
-        calledMethod,
-        methodProperties,
-      });
-      console.log(`Nova Poshta API searchSettlements request for ${cityName} successful!`);
-      console.log("Result data:", response.data);
-      const cityRef = response.data?.data?.[0]?.Addresses?.[0]?.Ref;
-      console.log("CityRef:", cityRef);
-      setCityRecipientRef(cityRef);
-      console.log("cityRecipientRef:", cityRecipientRef)
-    } catch (error: any) {
-      console.log(`Nova Poshta API searchSettlements request for ${cityName} failed!`);
-      console.log("Error:", error);
-      Alert.alert("Ошибка", error?.message);
-      return null;
-    }
-  };
-
-  useEffect(() => {
-    if (citySenderRef && cityRecipientRef) {
-      handleNovaPostRequest();
-    }
-  }, [citySenderRef, cityRecipientRef]);
-
-  const submitButton = async () => {
-    await getCitySenderRefByName(cityNameSender);
-    await getCityRecipientRefByName(cityNameRecipient);
-  }
-
-  const handleClearAll = () => {
-    setCitySenderRef("");
-    setCityRecipientRef("");
-    setCityNameSender("");
-    setCityNameRecipient("");
-    setResult("");
-  };
-
 
   return (
-    <View style={styles.container}>
-      <View style={styles.button}>
-        <Button
-          title="ClearAll"
-          onPress={handleClearAll}
-        />
-      </View>
-      <View style={styles.inputView}>
-        <Text style={styles.unit}>Откуда</Text>
-        <TextInput
-          style={styles.input}
-          value={cityNameSender}
-          onChangeText={async (text) => {
-            setCityNameSender(text);
-          }}
-          placeholder="Введите город отправления"
-        />
-      </View>
-      <View style={styles.inputView}>
-        <Text style={styles.unit}>Куда</Text>
-        <TextInput
-          style={styles.input}
-          value={cityNameRecipient}
-          onChangeText={async (text) => {
-            setCityNameRecipient(text);
-          }}
-          placeholder="Введите город назначения"
-        />
-      </View>
-      <View style={styles.inputView}>
-        <Text style={styles.input}>
-          {result}
-        </Text>
-      </View>
-      <View style={styles.button}>
-        <Button
-          title="Submit"
-          onPress={submitButton}
-        />
-      </View>
-      <Text style={styles.message}>Введите путь</Text>
-    </View>
+      <ScrollView style={styles.container}>
+        <VerticalSpace height={top + 32} />
+        <Text style={styles.title} variant="headlineLarge">Введите путь</Text>
+        <VerticalSpace height={16}/>
+        <TextInput autoFocus   onChangeText={setCitySenderName} returnKeyType={'done'} keyboardType={'numeric'} value={citySenderName} placeholder={'Киев'} mode={'outlined'} style={styles.input}
+                   label={'Откуда'} theme={inputTheme}/>
+        <VerticalSpace height={16}/>
+        <TextInput  onChangeText={setCityRecipientName} returnKeyType={'done'} keyboardType={'numeric'} value={cityRecipientName} placeholder={'Львов'} mode={'outlined'} style={styles.input}
+                    label={'Куда'} theme={inputTheme}/>
+        <VerticalSpace height={16}/>
+          <Text style={styles.title} variant="headlineLarge">{result ? `${result}` : 'Выберете город'}</Text>
+        <Row style={styles.buttonsContainer}>
+          <Button
+              icon={'close'}
+              mode={'contained'}
+              onPress={handleClearAll}
+              style={styles.buttonContent}
+          >ClearAll</Button>
+            <Button
+                disabled={!cityRecipientName}
+                mode={'contained'}
+                onPress={handleSubmit}
+                contentStyle={{
+                    ...styles.buttonContent,
+                    opacity: !cityRecipientName ? 0.8 : 1,
+                }}
+                labelStyle={styles.buttonLabel}
+            >Next</Button>
+
+        </Row>
+      </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputView: {
-    backgroundColor: "#ddd",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderRadius: 10,
-    margin: 2,
-    opacity: 0.9,
+    paddingHorizontal: 16,
   },
   input: {
-    margin: 10,
-    flex: 1,
-    color: "#0C1F1F",
-    textAlign: "right",
+    width: '100%',
+    backgroundColor:'#ddd',
+    opacity:0.9,
+    borderRadius:60,
   },
-  unit: {
-    marginHorizontal: 5,
-    color: "#0C1F1F",
+  buttonsContainer: {
+    padding: 16,
+    width: Dimensions.get('window').width - 48,
+    justifyContent: 'space-around',
   },
-  button: {
-    backgroundColor: '#ddd',
-    color: '#FFFFFF',
-    padding: 5,
-    borderRadius: 10,
-    margin: 5,
-    borderWidth: 1,
-    opacity: 0.9,
+  title: {
+    textAlign: 'center',
+    opacity:0.6
   },
-  message: {
-    fontSize: 30,
-    opacity: 0.5,
-  }
+  buttonContent: {
+    backgroundColor: '#61469E',
+    opacity: 0.8,
+  },
+  buttonLabel: {
+    color: 'white',
+    fontSize: 18,
+  },
 });

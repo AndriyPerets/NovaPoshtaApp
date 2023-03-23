@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
 import {View, StyleSheet, Dimensions} from "react-native";
 import {MainStackParamList} from "../navigation/MainNavigator";
-import {TextInput, Button, Text} from "react-native-paper";
+import {TextInput, Button, Text, DefaultTheme} from "react-native-paper";
 import VerticalSpace from "../components/VerticalSpace";
 import Row from "../components/Row";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -18,6 +18,11 @@ const VolumeScreen = ({navigation}: Props) => {
   const {volume, setVolume} = useContext(DimensionsContext)
 
   const {top} = useSafeAreaInsets();
+
+    const inputTheme = {
+        ...DefaultTheme,
+        roundness: 60,
+    };
 
   // const handleHeightInput = (value: string) => {
   //   setHeight((prevNum) => {
@@ -74,13 +79,13 @@ const VolumeScreen = ({navigation}: Props) => {
       <Text style={styles.title} variant="headlineLarge">Введите размеры коробки</Text>
       <VerticalSpace height={16}/>
       <TextInput autoFocus onChangeText={setHeight} returnKeyType={'done'} keyboardType={'numeric'} value={height} placeholder={'15'} mode={'outlined'} style={styles.input}
-                 label={'Высота'}/>
+                 label={'Высота'} theme={inputTheme}/>
       <VerticalSpace height={16}/>
       <TextInput onChangeText={setWidth} returnKeyType={'done'} keyboardType={'numeric'} value={width} placeholder={'15'} mode={'outlined'} style={styles.input}
-                 label={'Ширина'}/>
+                 label={'Ширина'} theme={inputTheme}/>
       <VerticalSpace height={16}/>
       <TextInput onChangeText={setLength} returnKeyType={'done'} keyboardType={'numeric'} value={length} placeholder={'15'} mode={'outlined'} style={styles.input}
-                 label={'Длина'}/>
+                 label={'Длина'} theme={inputTheme}/>
       <VerticalSpace height={16}/>
       <Text style={styles.title} variant="headlineLarge">{volume ? `${volume.toFixed(3)}m3` : 'Введите размеры'}</Text>
       <Row style={styles.buttonsContainer}>

@@ -3,7 +3,7 @@ import {DefaultTheme, NavigationContainer} from "@react-navigation/native";
 import React, {useState} from "react";
 import MainStackNavigator from "./navigation/MainNavigator";
 import {QueryClient, QueryClientProvider} from "react-query";
-import {CargoType, ServiceType} from "./API/dictionaries";
+import {CargoType, CityName, RouteProps, ServiceType} from "./API/dictionaries";
 import { DimensionsContext } from "./AppContext";
 
 //пользовательская тема
@@ -26,6 +26,11 @@ export default function App() {
   const [weight, setWeight] = useState<string>();
   const [cost, setCost] = useState<string>();
   const [placesAmount, setPlacesAmount] = useState<string>();
+  const [citySenderName, setCitySenderName] = useState<CityName>();
+  const [cityRecipientName, setCityRecipientName] = useState<CityName>();
+  const [citySenderRef, setCitySenderRef] = useState<RouteProps>();
+  const [cityRecipientRef, setCityRecipientRef] = useState<RouteProps>();
+  const [result, setResult] = useState<string>()
 
 
 
@@ -50,6 +55,16 @@ export default function App() {
               setCost,
               placesAmount,
               setPlacesAmount,
+              citySenderName,
+              setCitySenderName,
+              cityRecipientName,
+              setCityRecipientName,
+              citySenderRef,
+              setCitySenderRef,
+              cityRecipientRef,
+              setCityRecipientRef,
+              result,
+              setResult,
             }}
         >
           <QueryClientProvider client={queryClient}>

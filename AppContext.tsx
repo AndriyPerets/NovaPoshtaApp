@@ -1,10 +1,16 @@
-import {CargoType, ServiceType} from "./API/dictionaries";
+import {CargoType, CityName, RouteProps, ServiceType} from "./API/dictionaries";
 import {createContext} from "react";
+import {
+    QueryObserverIdleResult,
+    QueryObserverLoadingErrorResult,
+    QueryObserverLoadingResult,
+    QueryObserverRefetchErrorResult, QueryObserverSuccessResult
+} from "react-query";
 
 
 
 //тип данных TypeScript для объекта контекста (DimensionsContext)
-interface DimensionsContextProps {
+export interface DimensionsContextProps {
     volume?: number;
     setVolume: (volume?: number) => void;
     cargoType?: CargoType;
@@ -17,10 +23,20 @@ interface DimensionsContextProps {
     setCost: (cost?: string) => void;
     placesAmount?: string;
     setPlacesAmount: (placesAmount?: string) => void;
+    citySenderName?: CityName;
+    setCitySenderName: (citySenderName?: CityName) => void;
+    cityRecipientName?: CityName;
+    setCityRecipientName: (cityRecipientName?: CityName) => void;
+    citySenderRef?: RouteProps;
+    setCitySenderRef: (citySenderRef?: QueryObserverIdleResult<TQueryFnData, unknown> | QueryObserverLoadingErrorResult<TQueryFnData, unknown> | QueryObserverLoadingResult<TQueryFnData, unknown> | QueryObserverRefetchErrorResult<TQueryFnData, unknown> | QueryObserverSuccessResult<TQueryFnData, unknown>) => void;
+    cityRecipientRef?: RouteProps;
+    setCityRecipientRef: (cityRecipientRef?: QueryObserverIdleResult<TQueryFnData, unknown> | QueryObserverLoadingErrorResult<TQueryFnData, unknown> | QueryObserverLoadingResult<TQueryFnData, unknown> | QueryObserverRefetchErrorResult<TQueryFnData, unknown> | QueryObserverSuccessResult<TQueryFnData, unknown>) => void;
+    result?: string;
+    setResult: (result: string) => void;
 }
 
 // экспортируемый объект контекста (DimensionsContext)
-export const DimensionsContext = createContext<DimensionsContextProps>({ //экспортируемый объект контекста (DimensionsContext)
+export const DimensionsContext = createContext<DimensionsContextProps>({
     setVolume: () => {},
     volume: undefined,
     setCargoType: () => {},
@@ -33,4 +49,14 @@ export const DimensionsContext = createContext<DimensionsContextProps>({ //эк�
     cost: undefined,
     setPlacesAmount: () => {},
     placesAmount: undefined,
+    setCitySenderName: () => {},
+    citySenderName: undefined,
+    setCityRecipientName: () => {},
+    cityRecipientName: undefined,
+    setCitySenderRef: () => {},
+    citySenderRef: undefined,
+    setCityRecipientRef: () => {},
+    cityRecipientRef: undefined,
+    setResult: () => {},
+    result: undefined,
 });

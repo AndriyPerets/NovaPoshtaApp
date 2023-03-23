@@ -7,11 +7,21 @@ import {Button, TextInput, Text, DefaultTheme} from "react-native-paper";
 import {StackScreenProps} from "@react-navigation/stack";
 import Row from "../components/Row";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
+import {ServiceType} from "../API/dictionaries";
 
 type Props = StackScreenProps<MainStackParamList, 'Weight'>;
 
 export default function WeightScreen({navigation}: Props) {
-  const {weight, setWeight, serviceType, setServiceType, cost, setCost, cargoType, setCargoType, placesAmount, setPlacesAmount} = useContext(DimensionsContext);
+  const {weight,
+      setWeight,
+      serviceType,
+      setServiceType,
+      cost,
+      setCost,
+      cargoType,
+      setCargoType,
+      placesAmount,
+      setPlacesAmount} = useContext(DimensionsContext);
 
   const {top} = useSafeAreaInsets();
 
@@ -77,7 +87,8 @@ export default function WeightScreen({navigation}: Props) {
       () => navigation.navigate('ChooseServiceTypeScreen'),
       []);
 
-  return (
+
+    return (
     <ScrollView style={styles.container}>
       <VerticalSpace height={top + 32} />
       <Text style={styles.title} variant="headlineLarge">Заполните поля</Text>
@@ -91,17 +102,19 @@ export default function WeightScreen({navigation}: Props) {
       <TextInput  onChangeText={setPlacesAmount} returnKeyType={'done'} keyboardType={'numeric'}   value={placesAmount} placeholder={'1'} mode={'outlined'} style={styles.input}
                  label={'Количество мест'} theme={inputTheme}/>
       <VerticalSpace height={24}/>
-      <Button mode={'contained'} style={{
+      <Button  mode={'contained'} style={{
           ...styles.buttonContent,
           opacity: !serviceType ? 0.8 : 1,
       }}
-      onPress={goToServiceTypeScreen}>{serviceType ? `Тип услуги: ${serviceType.Description}` : `Нажмите, чтобы выбрать тип услуги`}</Button>
+      onPress={goToServiceTypeScreen}>
+          {serviceType ? `Тип услуги: ${serviceType.Description}` : `Нажмите, чтобы выбрать тип услуги`}</Button>
       <VerticalSpace height={24}/>
       <Button mode={'contained'} style={{
           ...styles.buttonContent,
           opacity: !cargoType ? 0.8 : 1,
       }}
-               onPress={goToCargoTypeScreen}>{cargoType ? `Тип груза: ${cargoType.Description}` : 'Нажмите, чтобы выбрать тип груза'}</Button>
+               onPress={goToCargoTypeScreen}>
+          {cargoType ? `Тип груза: ${cargoType.Description}` : 'Нажмите, чтобы выбрать тип груза'}</Button>
       <VerticalSpace height={16}/>
       <Row style={styles.buttonsContainer}>
         <Button
