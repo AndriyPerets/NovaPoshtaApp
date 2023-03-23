@@ -1,4 +1,4 @@
-import {StyleSheet, ScrollView, Dimensions, Alert} from "react-native";
+import {StyleSheet, ScrollView, Dimensions} from "react-native";
 import React, {useContext, useEffect, useState} from "react";
 import {MainStackParamList} from "../navigation/MainNavigator";
 import {DimensionsContext} from "../AppContext";
@@ -7,14 +7,12 @@ import VerticalSpace from "../components/VerticalSpace";
 import {Button, TextInput, Text, DefaultTheme} from "react-native-paper";
 import Row from "../components/Row";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
-import {getCityRefByName, routeRequest} from "../API/dictionaries";
 import {useCityRef, useRouteRequest} from "../queries/dictionaries";
 import {RouteProps} from "../API/dictionaries";
-import {novaPoshtaRequest} from "../API/API";
 
 type Props = StackScreenProps<MainStackParamList, 'Route'>;
 
-export default function RouteScreen({route, navigation}: Props) {
+export default function RouteScreen({navigation}: Props) {
   const {
       citySenderRef,
       setCitySenderRef,
@@ -54,8 +52,8 @@ export default function RouteScreen({route, navigation}: Props) {
 
     const handleSubmit = async () => {
         if (citySenderName && cityRecipientName) {
-            setCitySenderRef(useCityRef(citySenderName));
-            setCityRecipientRef(useCityRef(cityRecipientName));
+           await setCitySenderRef(useCityRef(citySenderName));
+           await setCityRecipientRef(useCityRef(cityRecipientName));
         }
     };
 
@@ -93,7 +91,11 @@ export default function RouteScreen({route, navigation}: Props) {
             <Button
                 disabled={!cityRecipientName}
                 mode={'contained'}
-                onPress={handleSubmit}
+                onPress={()=>{
+                    if(cityRecipientName){
+                        navigation.navigate('Result'),
+                        handleSubmit
+                }}}
                 contentStyle={{
                     ...styles.buttonContent,
                     opacity: !cityRecipientName ? 0.8 : 1,

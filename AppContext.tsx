@@ -28,11 +28,11 @@ export interface DimensionsContextProps {
     cityRecipientName?: CityName;
     setCityRecipientName: (cityRecipientName?: CityName) => void;
     citySenderRef?: RouteProps;
-    setCitySenderRef: (citySenderRef?: QueryObserverIdleResult<TQueryFnData, unknown> | QueryObserverLoadingErrorResult<TQueryFnData, unknown> | QueryObserverLoadingResult<TQueryFnData, unknown> | QueryObserverRefetchErrorResult<TQueryFnData, unknown> | QueryObserverSuccessResult<TQueryFnData, unknown>) => void;
+    setCitySenderRef: (citySenderRef?: RouteProps) => void;
     cityRecipientRef?: RouteProps;
-    setCityRecipientRef: (cityRecipientRef?: QueryObserverIdleResult<TQueryFnData, unknown> | QueryObserverLoadingErrorResult<TQueryFnData, unknown> | QueryObserverLoadingResult<TQueryFnData, unknown> | QueryObserverRefetchErrorResult<TQueryFnData, unknown> | QueryObserverSuccessResult<TQueryFnData, unknown>) => void;
+    setCityRecipientRef: (cityRecipientRef?: RouteProps) => void;
     result?: string;
-    setResult: (result: QueryObserverIdleResult<TQueryFnData, unknown> | QueryObserverLoadingErrorResult<TQueryFnData, unknown> | QueryObserverLoadingResult<TQueryFnData, unknown> | QueryObserverRefetchErrorResult<TQueryFnData, unknown> | QueryObserverSuccessResult<TQueryFnData, unknown>) => void;
+    setResult: (result: string) => void;
 }
 
 // экспортируемый объект контекста (DimensionsContext)

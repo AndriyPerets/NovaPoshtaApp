@@ -20,13 +20,7 @@ export interface NovaPoshtaRequest {
   methodProperties: { [key: string]: string; }
 }
 
-export interface NovaPoshtaCityNameRequest {
-  modelName: string,
-  calledMethod: string,
-  methodProperties: { [key: string]: string; }
-}
-
-export const novaPoshtaRequest = async (request: { modelName: string; methodProperties: {}; calledMethod: string }): Promise<NovaPoshtaResponse<any>> => {
+export const novaPoshtaRequest = async (request: NovaPoshtaRequest): Promise<NovaPoshtaResponse<any>> => {
   const {data} = await axios.post(API_URL, {
     apiKey: API_KEY,
     ...request,
@@ -37,7 +31,14 @@ export const novaPoshtaRequest = async (request: { modelName: string; methodProp
   return data
 }
 
-export const novaPoshtaCityRefRequest = async (request: { modelName: string; methodProperties: { CityName: CityName; Limit: string }; calledMethod: string }): Promise<NovaPoshtaResponse<any>> => {
+export interface NovaPoshtaCityRefRequest {
+  modelName: string,
+  calledMethod: string,
+  methodProperties: { CityName: CityName; Limit: string  }
+}
+
+
+export const novaPoshtaCityRefRequest = async (request: NovaPoshtaCityRefRequest): Promise<NovaPoshtaResponse<any>> => {
   const {data} = await axios.post(API_URL, {
     apiKey: API_KEY,
     ...request,

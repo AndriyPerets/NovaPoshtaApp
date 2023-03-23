@@ -43,10 +43,6 @@ export const getCityRefByName = async (cityName: CityName): Promise<NovaPoshtaRe
   })
 }
 
-// export interface CityRef {
-//   MainDescription: string,
-//   Ref: string
-// }
 
 export interface RouteProps {
   citySenderRef: string,
