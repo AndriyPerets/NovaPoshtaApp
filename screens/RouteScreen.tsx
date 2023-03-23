@@ -54,24 +54,21 @@ export default function RouteScreen({route, navigation}: Props) {
 
     const handleSubmit = async () => {
         if (citySenderName && cityRecipientName) {
-            const citySender = useCityRef(citySenderName);
-            const cityRecipient = useCityRef(cityRecipientName);
-            setCitySenderRef(citySender);
-            setCityRecipientRef(cityRecipient);
+            setCitySenderRef(useCityRef(citySenderName));
+            setCityRecipientRef(useCityRef(cityRecipientName));
         }
     };
 
     useEffect (()=> {
         if(citySenderRef && cityRecipientRef) {
-            const cost = useRouteRequest(routeProps);
-            setResult(cost);
+            setResult(useRouteRequest(routeProps));
         }
-    });
+    }, [citySenderRef, cityRecipientRef]);
 
     const handleClearAll = () => {
         setCitySenderName();
         setCityRecipientName();
-        setResult('');
+        setResult();
     };
 
   return (
@@ -79,10 +76,10 @@ export default function RouteScreen({route, navigation}: Props) {
         <VerticalSpace height={top + 32} />
         <Text style={styles.title} variant="headlineLarge">Введите путь</Text>
         <VerticalSpace height={16}/>
-        <TextInput autoFocus   onChangeText={setCitySenderName} returnKeyType={'done'} keyboardType={'numeric'} value={citySenderName} placeholder={'Киев'} mode={'outlined'} style={styles.input}
+        <TextInput autoFocus   onChangeText={()=>setCitySenderName} returnKeyType={'done'} keyboardType={'numeric'} value={citySenderName} placeholder={'Киев'} mode={'outlined'} style={styles.input}
                    label={'Откуда'} theme={inputTheme}/>
         <VerticalSpace height={16}/>
-        <TextInput  onChangeText={setCityRecipientName} returnKeyType={'done'} keyboardType={'numeric'} value={cityRecipientName} placeholder={'Львов'} mode={'outlined'} style={styles.input}
+        <TextInput  onChangeText={()=>setCityRecipientName} returnKeyType={'done'} keyboardType={'numeric'} value={cityRecipientName} placeholder={'Львов'} mode={'outlined'} style={styles.input}
                     label={'Куда'} theme={inputTheme}/>
         <VerticalSpace height={16}/>
           <Text style={styles.title} variant="headlineLarge">{result ? `${result}` : 'Выберете город'}</Text>

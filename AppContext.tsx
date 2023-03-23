@@ -32,7 +32,7 @@ export interface DimensionsContextProps {
     cityRecipientRef?: RouteProps;
     setCityRecipientRef: (cityRecipientRef?: QueryObserverIdleResult<TQueryFnData, unknown> | QueryObserverLoadingErrorResult<TQueryFnData, unknown> | QueryObserverLoadingResult<TQueryFnData, unknown> | QueryObserverRefetchErrorResult<TQueryFnData, unknown> | QueryObserverSuccessResult<TQueryFnData, unknown>) => void;
     result?: string;
-    setResult: (result: string) => void;
+    setResult: (result: QueryObserverIdleResult<TQueryFnData, unknown> | QueryObserverLoadingErrorResult<TQueryFnData, unknown> | QueryObserverLoadingResult<TQueryFnData, unknown> | QueryObserverRefetchErrorResult<TQueryFnData, unknown> | QueryObserverSuccessResult<TQueryFnData, unknown>) => void;
 }
 
 // экспортируемый объект контекста (DimensionsContext)
