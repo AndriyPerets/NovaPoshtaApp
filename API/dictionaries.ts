@@ -26,11 +26,42 @@ export const listServiceTypes = async (): Promise<NovaPoshtaResponse<ServiceType
   })
 }
 
-export interface CityName {
-  MainDescription: string,
+export interface AreaName {
+  Description: string,
   Ref: string
 }
 
+export const ListAreaNames = async (): Promise<NovaPoshtaResponse<AreaName>> => {
+  return novaPoshtaRequest({
+    modelName: "Address",
+    calledMethod: "getAreas",
+    methodProperties: {
+    }
+  })
+}
+
+export interface CityName {
+  Description: string,
+  Ref: string
+}
+
+export const ListCityNames = async (areaRef: string): Promise<NovaPoshtaResponse<CityName>> => {
+  return novaPoshtaRequest({
+    modelName: "Address",
+    calledMethod: "getCities",
+    methodProperties: {
+      AreaRef: areaRef,
+      Page: "1",
+      Limit: "20",
+      Warehouse: "1",
+    },
+  });
+};
+
+export interface CityRef {
+  Description: string,
+  Ref: string
+}
 
 export const getCityRefByName = async (cityName: CityName): Promise<NovaPoshtaResponse<CityName>> => {
   return novaPoshtaCityRefRequest({
@@ -45,15 +76,16 @@ export const getCityRefByName = async (cityName: CityName): Promise<NovaPoshtaRe
 
 
 export interface RouteProps {
-  citySenderRef: string,
-  cityRecipientRef: string,
-  weight: string,
-  serviceType: string,
-  cost: string,
-  cargoType: string,
-  placesAmount: string
-  volume: string,
+  senderRef: string;
+  recipientRef: string;
+  weight: string;
+  serviceType: string;
+  cost: string;
+  cargoType: string;
+  placesAmount: string;
+  volume: string;
 }
+
 
 export const routeRequest = async (routeProps: RouteProps): Promise<NovaPoshtaResponse<RouteProps>> => {
 
@@ -61,8 +93,8 @@ export const routeRequest = async (routeProps: RouteProps): Promise<NovaPoshtaRe
     modelName: 'InternetDocument',
     calledMethod: 'getDocumentPrice',
     methodProperties: {
-      CitySender: routeProps.citySenderRef,
-      CityRecipient: routeProps.cityRecipientRef,
+      CitySender: routeProps.senderRef,
+      CityRecipient: routeProps.recipientRef,
       Weight: routeProps.weight,
       ServiceType: routeProps.serviceType,
       Cost: routeProps.cost,

@@ -1,10 +1,13 @@
 import {useQuery} from "react-query";
 import {
+  AreaName,
   CargoType,
-  CityName,
-  getCityRefByName,
-  listCargoTypes,
-  listServiceTypes, RouteProps, routeRequest,
+  CityName, CityRef,
+  getCityRefByName, ListAreaNames,
+  listCargoTypes, ListCityNames,
+  listServiceTypes,
+  RouteProps,
+  routeRequest,
   ServiceType
 } from "../API/dictionaries";
 
@@ -44,23 +47,77 @@ export const useServiceTypes = () => useQuery<ServiceType[], any, ServiceType[]>
   }
 });
 
-export const useCityRef = (cityName:CityName) => useQuery<CityName>('cityName', async () => {
-  const cityRefResponse = await getCityRefByName(cityName);
-  if (cityRefResponse.success && cityRefResponse.data.length > 0) {
-    return cityRefResponse.data[0]
+export const useAreaNames = () => useQuery<AreaName[], any, AreaName[]>('areaName', async () => {
+  const areaNameResponse = await ListAreaNames();
+  if (areaNameResponse.success && areaNameResponse.data.length > 0) {
+    return areaNameResponse.data
   } else {
-    if (cityRefResponse.errors.length > 0) {
-      throw new Error(cityRefResponse.errors[0])
+    if (areaNameResponse.errors.length > 0) {
+      throw new Error(areaNameResponse.errors[0])
     }
-    if (cityRefResponse.warnings.length > 0) {
-      throw new Error(cityRefResponse.errors[0])
+    if (areaNameResponse.warnings.length > 0) {
+      throw new Error(areaNameResponse.errors[0])
     }
-    if (cityRefResponse.info.length > 0) {
-      throw new Error(cityRefResponse.errors[0])
+    if (areaNameResponse.info.length > 0) {
+      throw new Error(areaNameResponse.errors[0])
     }
     throw new Error('Unexpected error')
   }
 });
+
+export const useCityNames = (areaRef: string) => {
+  return useQuery<CityName[], Error>(
+    ["cityNames", areaRef],
+    async () => {
+      const cityNameResponse = await ListCityNames(areaRef);
+      if (cityNameResponse.success && cityNameResponse.data.length > 0) {
+        return cityNameResponse.data;
+      } else {
+        if (cityNameResponse.errors.length > 0) {
+          throw new Error(cityNameResponse.errors[0]);
+        }
+        if (cityNameResponse.warnings.length > 0) {
+          throw new Error(cityNameResponse.errors[0]);
+        }
+        if (cityNameResponse.info.length > 0) {
+          throw new Error(cityNameResponse.errors[0]);
+        }
+        throw new Error("Unexpected error");
+      }
+    },
+    { enabled: !!areaRef }
+  );
+};
+
+
+  export const useCityRef = (cityName: CityName) => {
+  return useQuery<CityRef, Error>(
+    ["cityRef", cityName],
+    async () => {
+      const cityRefResponse = await getCityRefByName(cityName);
+      if (cityRefResponse.success && cityRefResponse.data.length > 0) {
+        return {
+          Description: cityName.Description,
+          Ref: cityRefResponse.data[0].Ref,
+        };
+      } else {
+        if (cityRefResponse.errors.length > 0) {
+          throw new Error(cityRefResponse.errors[0]);
+        }
+        if (cityRefResponse.warnings.length > 0) {
+          throw new Error(cityRefResponse.errors[0]);
+        }
+        if (cityRefResponse.info.length > 0) {
+          throw new Error(cityRefResponse.errors[0]);
+        }
+        throw new Error("Unexpected error");
+      }
+    },
+    { enabled: !!cityName } // выполнять запрос только если указано имя города
+  );
+};
+
+
 
 
 export const useRouteRequest = (routeProps: RouteProps) => useQuery<string>('routeRequest', async () => {

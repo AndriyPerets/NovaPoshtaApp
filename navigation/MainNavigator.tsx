@@ -5,12 +5,16 @@ import {createStackNavigator} from "@react-navigation/stack";
 import ResultScreen from "../screens/ResultScreen";
 import ChooseCargoTypeScreen from "../screens/ChooseCargoTypeScreen";
 import ChooseServiceTypeScreen from "../screens/ChooseServiceTypeScreen";
+import ChooseAreaNameScreen from "../screens/ChooseAreaNameScreen";
+import ChooseCityNameScreen from "../screens/ChooseCityNameScreen";
+import {AreaName} from "../API/dictionaries";
 
 
 export type MainStackParamList = {
-  // Main: undefined;
   ChooseCargoTypeScreen: undefined;
   ChooseServiceTypeScreen: undefined;
+  ChooseAreaNameScreen: {type?: 'sender' | 'recipient';};
+  ChooseCityNameScreen: { selectedArea: AreaName; type?: "sender" | "recipient" };
   Volume: undefined;
   Weight: undefined;
   Route: undefined;
@@ -52,6 +56,16 @@ const MainStackNavigator = () => {
           name="ChooseServiceTypeScreen"
           options={{headerTransparent: true}}
           component={ChooseServiceTypeScreen}
+      />
+      <MainStack.Screen
+        name="ChooseAreaNameScreen"
+        options={{headerTransparent: true}}
+        component={ChooseAreaNameScreen}
+      />
+      <MainStack.Screen
+        name="ChooseCityNameScreen"
+        options={{headerTransparent: true}}
+        component={ChooseCityNameScreen}
       />
     </MainStack.Navigator>
   )
