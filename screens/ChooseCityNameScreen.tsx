@@ -3,10 +3,12 @@ import {MainStackParamList} from "../navigation/MainNavigator";
 import {useCityNames} from "../queries/dictionaries";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {DimensionsContext} from "../AppContext";
-import React, {useCallback, useContext} from "react";
+import React, {useContext, useState} from "react";
 import VerticalSpace from "../components/VerticalSpace";
-import {ActivityIndicator, FlatList, ListRenderItem, StyleSheet, View, Pressable, Text} from "react-native";
+import {ActivityIndicator, FlatList, ListRenderItem, StyleSheet, View, Pressable} from "react-native";
 import {CityName} from "../API/dictionaries";
+import {TextInput, Text, DefaultTheme} from "react-native-paper";
+
 
 type Props = StackScreenProps<MainStackParamList, 'ChooseCityNameScreen'>;
 
@@ -24,6 +26,16 @@ const ChooseCityNameScreen = ({navigation, route}: Props) => {
 		cityRecipientRef} = useContext(DimensionsContext);
 	const {top} = useSafeAreaInsets();
 	const { type } = route.params;
+	const [filter, setFilter] = useState('');
+
+	const inputTheme = {
+		...DefaultTheme,
+		roundness: 60,
+	};
+
+	const handleFilterChange = (text: string) => {
+		setFilter(text);
+	};
 
 	const renderCityItem: ListRenderItem<CityName> = ({item}) => {
 		const onItemPress = () => {
@@ -54,8 +66,23 @@ const ChooseCityNameScreen = ({navigation, route}: Props) => {
 				<ActivityIndicator />
 			) : (
 				<View style={styles.container}>
+						<View style={styles.filterContainer}>
+							<TextInput
+								autoFocus
+								style={styles.filterInput}
+								onChangeText={handleFilterChange}
+								value={filter}
+								placeholder="Введите название города"
+								label={'Введите название города'}
+								theme={inputTheme}
+								mode={'outlined'}
+								returnKeyType="done"
+							/>
+						</View>
 					<FlatList
-						data={cityNames.data}
+						data={cityNames.data?.filter((city) =>
+							city.Description.toLowerCase().includes(filter.toLowerCase())
+						)}
 						renderItem={renderCityItem}
 						keyExtractor={item => item.Description}
 					/>
@@ -83,5 +110,13 @@ const styles = StyleSheet.create({
 		marginBottom: 8,
 		backgroundColor: "#ddd",
 		opacity:0.8,
+	},
+	filterContainer: {
+		marginBottom: 8,
+	},
+	filterInput: {
+		width: '100%',
+		backgroundColor: '#ddd',
+		opacity: 0.9,
 	},
 });

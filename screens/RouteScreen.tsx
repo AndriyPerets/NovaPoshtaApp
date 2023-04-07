@@ -53,13 +53,10 @@ export default function RouteScreen({navigation}: Props) {
       try {
         const routeResult = await fetchRouteRequest(routeProps);
         setResult(routeResult.toString());
-        // console.log(routeResult);
       } catch (error) {
         console.log("Error while getting route result: ", error);
-        // setResult(undefined);
       }
     }
-    console.log(result);
   };
 
 

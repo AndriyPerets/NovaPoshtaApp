@@ -71,7 +71,7 @@ export interface RouteProps {
 
 
 export const routeRequest = async (routeProps: RouteProps): Promise<NovaPoshtaResponse<RouteProps>> => {
-  console.log(routeProps);
+  // console.log(routeProps);
   return novaPoshtaRequest({
     modelName: 'InternetDocument',
     calledMethod: 'getDocumentPrice',
