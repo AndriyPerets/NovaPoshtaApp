@@ -2,12 +2,13 @@ import {useQuery} from "react-query";
 import {
   AreaName,
   CargoType,
-  CityName, CityRef,
-  getCityRefByName, ListAreaNames,
+  CityName,
+  ListAreaNames,
   listCargoTypes, ListCityNames,
   listServiceTypes,
   RouteProps,
   routeRequest,
+  RouteResponseData,
   ServiceType
 } from "../API/dictionaries";
 
@@ -89,56 +90,33 @@ export const useCityNames = (areaRef: string) => {
   );
 };
 
-
-  export const useCityRef = (cityName: CityName) => {
-  return useQuery<CityRef, Error>(
-    ["cityRef", cityName],
-    async () => {
-      const cityRefResponse = await getCityRefByName(cityName);
-      if (cityRefResponse.success && cityRefResponse.data.length > 0) {
-        return {
-          Description: cityName.Description,
-          Ref: cityRefResponse.data[0].Ref,
-        };
-      } else {
-        if (cityRefResponse.errors.length > 0) {
-          throw new Error(cityRefResponse.errors[0]);
-        }
-        if (cityRefResponse.warnings.length > 0) {
-          throw new Error(cityRefResponse.errors[0]);
-        }
-        if (cityRefResponse.info.length > 0) {
-          throw new Error(cityRefResponse.errors[0]);
-        }
-        throw new Error("Unexpected error");
-      }
-    },
-    { enabled: !!cityName } // выполнять запрос только если указано имя города
-  );
-};
-
-
-
-
-export const useRouteRequest = (routeProps: RouteProps) => useQuery<string>('routeRequest', async () => {
+export const fetchRouteRequest = async (routeProps: RouteProps) => {
   const routeResponse = await routeRequest(routeProps);
+  // console.log("routeResponse:", routeResponse);
   if (routeResponse.success) {
-    const cost = routeResponse.data?.[0]?.cost;
+    const cost = ((routeResponse.data as unknown) as RouteResponseData[])[0]?.Cost;
+    // console.log("cost:", cost);
+    // console.log(routeResponse.data?.[0]?.cost);
     if (cost !== undefined) {
       return cost;
     } else {
       throw new Error('Стоимость доставки не найдена');
+      // console.log('Стоимость доставки не найдена');
     }
   } else {
     if (routeResponse.errors.length > 0) {
       throw new Error(routeResponse.errors[0]);
+      // console.log(routeResponse.errors[0]);
     }
     if (routeResponse.warnings.length > 0) {
       throw new Error(routeResponse.warnings[0]);
+      // console.log(routeResponse.warnings[0]);
     }
     if (routeResponse.info.length > 0) {
       throw new Error(routeResponse.info[0]);
+      // console.log(routeResponse.info[0]);
     }
     throw new Error('Unexpected error');
+    // console.log('Unexpected error');
   }
-});
+};

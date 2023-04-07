@@ -1,4 +1,4 @@
-import {StyleSheet, View, Text, Button} from "react-native";
+import {StyleSheet, View, Text} from "react-native";
 import React, {useContext} from "react";
 import {MainStackParamList} from "../navigation/MainNavigator";
 import {StackScreenProps} from "@react-navigation/stack";
@@ -11,7 +11,7 @@ export default function ResultScreen({route, navigation}: Props) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.result}>{result}</Text>
+      <Text style={styles.result}>{result} uah</Text>
     </View>
   );
 }
@@ -23,7 +23,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   result: {
-    fontSize: 20,
+    fontSize: 40,
+    fontStyle: 'italic',
     margin: 10,
   },
 });

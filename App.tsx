@@ -3,7 +3,7 @@ import {DefaultTheme, NavigationContainer} from "@react-navigation/native";
 import React, {useState} from "react";
 import MainStackNavigator from "./navigation/MainNavigator";
 import {QueryClient, QueryClientProvider} from "react-query";
-import {AreaName, CargoType, CityName, CityRef, RouteProps, ServiceType} from "./API/dictionaries";
+import {AreaName, CargoType, CityName, ServiceType} from "./API/dictionaries";
 import { DimensionsContext } from "./AppContext";
 
 //пользовательская тема
@@ -25,13 +25,13 @@ export default function App() {
   const [serviceType, setServiceType] = useState<ServiceType>();
   const [weight, setWeight] = useState<string>();
   const [cost, setCost] = useState<string>();
-  const [placesAmount, setPlacesAmount] = useState<string>();
+  const [seatsAmount, setSeatsAmount] = useState<string>();
   const [areaSenderName, setAreaSenderName] = useState<AreaName>();
   const [areaRecipientName, setAreaRecipientName] = useState<AreaName>();
   const [citySenderName, setCitySenderName] = useState<CityName>();
   const [cityRecipientName, setCityRecipientName] = useState<CityName>();
-  const [citySenderRef, setCitySenderRef] = useState<CityRef | undefined>();
-  const [cityRecipientRef, setCityRecipientRef] = useState<CityRef | undefined>();
+  const [citySenderRef, setCitySenderRef] = useState<string | undefined>();
+  const [cityRecipientRef, setCityRecipientRef] = useState<string | undefined>();
   const [result, setResult] = useState<string>()
 
 
@@ -55,8 +55,8 @@ export default function App() {
               setWeight,
               cost,
               setCost,
-              placesAmount,
-              setPlacesAmount,
+              seatsAmount,
+              setSeatsAmount,
               areaSenderName,
               setAreaSenderName,
               areaRecipientName,

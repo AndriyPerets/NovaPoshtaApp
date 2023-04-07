@@ -1,4 +1,4 @@
-import {novaPoshtaCityRefRequest, novaPoshtaRequest, NovaPoshtaResponse} from "./API";
+import {novaPoshtaRequest, NovaPoshtaResponse} from "./API";
 
 export interface CargoType {
   Description: string,
@@ -52,55 +52,43 @@ export const ListCityNames = async (areaRef: string): Promise<NovaPoshtaResponse
     methodProperties: {
       AreaRef: areaRef,
       Page: "1",
-      Limit: "20",
+      // Limit: "20",
       Warehouse: "1",
     },
   });
 };
 
-export interface CityRef {
-  Description: string,
-  Ref: string
-}
-
-export const getCityRefByName = async (cityName: CityName): Promise<NovaPoshtaResponse<CityName>> => {
-  return novaPoshtaCityRefRequest({
-    modelName: "Address",
-    calledMethod: "searchSettlements",
-    methodProperties: {
-      CityName: cityName,
-      Limit: "1"
-    }
-  })
-}
-
-
 export interface RouteProps {
-  senderRef: string;
-  recipientRef: string;
+  citySenderRef: string;
+  cityRecipientRef: string;
   weight: string;
   serviceType: string;
   cost: string;
   cargoType: string;
-  placesAmount: string;
+  seatsAmount: string;
   volume: string;
 }
 
 
 export const routeRequest = async (routeProps: RouteProps): Promise<NovaPoshtaResponse<RouteProps>> => {
-
+  console.log(routeProps);
   return novaPoshtaRequest({
     modelName: 'InternetDocument',
     calledMethod: 'getDocumentPrice',
     methodProperties: {
-      CitySender: routeProps.senderRef,
-      CityRecipient: routeProps.recipientRef,
+      CitySender: routeProps.citySenderRef,
+      CityRecipient: routeProps.cityRecipientRef,
       Weight: routeProps.weight,
       ServiceType: routeProps.serviceType,
       Cost: routeProps.cost,
       CargoType: routeProps.cargoType,
-      SeatsAmount: routeProps.placesAmount,
+      SeatsAmount: routeProps.seatsAmount,
       VolumeGeneral: routeProps.volume,
     },
   });
 };
+
+export interface RouteResponseData {
+  AssessedCost: number;
+  Cost: number;
+}

@@ -20,8 +20,8 @@ export default function WeightScreen({navigation}: Props) {
       setCost,
       cargoType,
       setCargoType,
-      placesAmount,
-      setPlacesAmount} = useContext(DimensionsContext);
+      seatsAmount,
+      setSeatsAmount} = useContext(DimensionsContext);
 
   const {top} = useSafeAreaInsets();
 
@@ -76,7 +76,7 @@ export default function WeightScreen({navigation}: Props) {
     setServiceType(undefined);
     setCost(undefined);
     setCargoType(undefined);
-    setPlacesAmount(undefined)
+    setSeatsAmount(undefined)
   };
 
   const goToCargoTypeScreen = useCallback(
@@ -99,7 +99,7 @@ export default function WeightScreen({navigation}: Props) {
       <TextInput  onChangeText={setCost} returnKeyType={'done'} keyboardType={'numeric'} value={cost} placeholder={'300'} mode={'outlined'} style={styles.input}
                  label={'Оценочная стоимость'} theme={inputTheme}/>
       <VerticalSpace height={16}/>
-      <TextInput  onChangeText={setPlacesAmount} returnKeyType={'done'} keyboardType={'numeric'}   value={placesAmount} placeholder={'1'} mode={'outlined'} style={styles.input}
+      <TextInput  onChangeText={setSeatsAmount} returnKeyType={'done'} keyboardType={'numeric'}   value={seatsAmount} placeholder={'1'} mode={'outlined'} style={styles.input}
                  label={'Количество мест'} theme={inputTheme}/>
       <VerticalSpace height={24}/>
       <Button  mode={'contained'} style={{

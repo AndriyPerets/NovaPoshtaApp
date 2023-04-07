@@ -1,5 +1,5 @@
 import {StyleSheet, ScrollView, Dimensions} from "react-native";
-import React, {useCallback, useContext, useEffect, useState} from "react";
+import React, {useCallback, useContext} from "react";
 import {MainStackParamList} from "../navigation/MainNavigator";
 import {DimensionsContext} from "../AppContext";
 import {StackScreenProps} from "@react-navigation/stack";
@@ -7,10 +7,8 @@ import VerticalSpace from "../components/VerticalSpace";
 import {Button, Text, DefaultTheme} from "react-native-paper";
 import Row from "../components/Row";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
-import {useCityRef, useRouteRequest} from "../queries/dictionaries";
-import {RouteProps, routeRequest} from "../API/dictionaries";
-import {useQuery} from "react-query";
-
+import {fetchRouteRequest} from "../queries/dictionaries";
+import {RouteProps} from "../API/dictionaries";
 
 type Props = StackScreenProps<MainStackParamList, 'Route'>;
 
@@ -29,57 +27,41 @@ export default function RouteScreen({navigation}: Props) {
       volume,
       weight,
       cost,
-      placesAmount,
+      seatsAmount,
       cargoType,
       serviceType
       } = useContext(DimensionsContext);
-
   const inputTheme = {
     ...DefaultTheme,
     roundness: 60,
   };
-
   const { top } = useSafeAreaInsets();
 
-  useEffect(() => {
-    if (citySenderRef && cityRecipientRef) {
-      console.log({citySenderName});
-      console.log({cityRecipientName});
-    }
-  }, [citySenderRef, cityRecipientRef]);
-
   const routeProps: RouteProps = {
-    senderRef: citySenderRef?.Ref ?? "",
-    recipientRef: cityRecipientRef?.Ref ?? "",
+    citySenderRef: citySenderRef ?? "",
+    cityRecipientRef: cityRecipientRef ?? "",
     weight: weight ?? "",
-    serviceType: serviceType ? serviceType.toString() : "",
+    serviceType: serviceType?.Ref ?? "",
     cost: cost ?? "",
-    cargoType: cargoType ? cargoType.toString() : "",
-    placesAmount: placesAmount ?? "",
+    cargoType: cargoType?.Ref ?? "",
+    seatsAmount: seatsAmount ?? "",
     volume: volume ? volume.toString() : "",
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (citySenderName && cityRecipientName) {
-      const senderRefQuery = useCityRef(citySenderName);
-      const recipientRefQuery = useCityRef(cityRecipientName);
-
-      if (senderRefQuery.isSuccess && recipientRefQuery.isSuccess) {
-        setCitySenderRef(senderRefQuery.data);
-        setCityRecipientRef(recipientRefQuery.data);
+      try {
+        const routeResult = await fetchRouteRequest(routeProps);
+        setResult(routeResult.toString());
+        // console.log(routeResult);
+      } catch (error) {
+        console.log("Error while getting route result: ", error);
+        // setResult(undefined);
       }
     }
+    console.log(result);
   };
 
-  const getRouteResult = async () => {
-    return useRouteRequest(routeProps);
-  };
-
-  const { data: routeResult } = useQuery(
-    ["routeRequest", routeProps],
-    getRouteResult,
-    { enabled: !!citySenderRef && !!cityRecipientRef }
-  );
 
   const goToAreaNameScreen = useCallback(
     (type: 'sender' | 'recipient') => navigation.navigate('ChooseAreaNameScreen', {type}),
@@ -123,7 +105,7 @@ export default function RouteScreen({navigation}: Props) {
         </Button>
 
         <VerticalSpace height={16}/>
-          <Text style={styles.title} variant="headlineLarge">{result ? `${result}` : 'Выберете город'}</Text>
+          {/*<Text style={styles.title} variant="headlineLarge">{result ? `${result}` : 'Выберете город'}</Text>*/}
         <Row style={styles.buttonsContainer}>
           <Button
               icon={'close'}
@@ -136,8 +118,8 @@ export default function RouteScreen({navigation}: Props) {
             mode={'contained'}
             onPress={()=>{
               if(cityRecipientName){
-                navigation.navigate('Result');
-                handleSubmit();
+                handleSubmit()
+                  .then(() => navigation.navigate('Result'));
               }
             }}
             contentStyle={{
@@ -145,7 +127,10 @@ export default function RouteScreen({navigation}: Props) {
               opacity: !cityRecipientName ? 0.8 : 1,
             }}
             labelStyle={styles.buttonLabel}
-          >Next</Button>
+          >
+            Next
+          </Button>
+
 
         </Row>
       </ScrollView>

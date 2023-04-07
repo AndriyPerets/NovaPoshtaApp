@@ -1,13 +1,5 @@
-import {AreaName, CargoType, CityName, CityRef, RouteProps, ServiceType} from "./API/dictionaries";
+import {AreaName, CargoType, CityName, ServiceType} from "./API/dictionaries";
 import {createContext} from "react";
-import {
-    QueryObserverIdleResult,
-    QueryObserverLoadingErrorResult,
-    QueryObserverLoadingResult,
-    QueryObserverRefetchErrorResult, QueryObserverSuccessResult
-} from "react-query";
-
-
 
 //тип данных TypeScript для объекта контекста (DimensionsContext)
 export interface DimensionsContextProps {
@@ -21,8 +13,8 @@ export interface DimensionsContextProps {
     setWeight: (weight?: string) => void;
     cost?: string;
     setCost: (cost?: string) => void;
-    placesAmount?: string;
-    setPlacesAmount: (placesAmount?: string) => void;
+    seatsAmount?: string;
+    setSeatsAmount: (seatsAmount?: string) => void;
     areaSenderName?: AreaName
     setAreaSenderName: (areaSenderName?: AreaName) => void;
     areaRecipientName?: AreaName;
@@ -31,10 +23,10 @@ export interface DimensionsContextProps {
     setCitySenderName: (citySenderName?: CityName) => void;
     cityRecipientName?: CityName;
     setCityRecipientName: (cityRecipientName?: CityName) => void;
-    citySenderRef?: CityRef;
-    setCitySenderRef: (citySenderRef?: CityRef) => void;
-    cityRecipientRef?: CityRef;
-    setCityRecipientRef: (cityRecipientRef?: CityRef) => void;
+    citySenderRef?: string;
+    setCitySenderRef: (citySenderRef?: string) => void;
+    cityRecipientRef?: string;
+    setCityRecipientRef: (cityRecipientRef?: string) => void;
     result?: string;
     setResult: (result?: string) => void;
 }
@@ -51,8 +43,8 @@ export const DimensionsContext = createContext<DimensionsContextProps>({
     weight: undefined,
     setCost: () => {},
     cost: undefined,
-    setPlacesAmount: () => {},
-    placesAmount: undefined,
+    setSeatsAmount: () => {},
+    seatsAmount: undefined,
     setAreaSenderName: () => {},
     areaSenderName: undefined,
     setAreaRecipientName: () => {},

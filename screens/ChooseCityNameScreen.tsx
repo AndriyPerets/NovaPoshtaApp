@@ -14,22 +14,29 @@ type Props = StackScreenProps<MainStackParamList, 'ChooseCityNameScreen'>;
 const ChooseCityNameScreen = ({navigation, route}: Props) => {
 	const { selectedArea } = route.params;
 	const cityNames = useCityNames(selectedArea.Ref);
-	const {setCitySenderName, setCityRecipientName} = useContext(DimensionsContext);
+	const {setCitySenderName,
+		setCityRecipientName,
+		setCitySenderRef,
+		citySenderName,
+		setCityRecipientRef,
+		cityRecipientName,
+		citySenderRef,
+		cityRecipientRef} = useContext(DimensionsContext);
 	const {top} = useSafeAreaInsets();
 	const { type } = route.params;
-	console.log("type:", type);
-
 
 	const renderCityItem: ListRenderItem<CityName> = ({item}) => {
 		const onItemPress = () => {
 			if(type === 'sender'){
 				setCitySenderName(item);
-				console.log('sender');
-				console.log("CitySenderName: ", item.Description);
+				setCitySenderRef(item.Ref);
+				// console.log(citySenderRef);
+				// console.log("CitySenderName: ", item.Description);
 			} else if (type === 'recipient'){
 				setCityRecipientName(item);
-				console.log('recipient');
-				console.log("CityRecipientName: ", item.Description);
+				setCityRecipientRef(item.Ref);
+				// console.log(cityRecipientRef);
+				// console.log("CityRecipientName: ", item.Description);
 			}
 			navigation.navigate('Route');
 		}
