@@ -26,33 +26,16 @@ export const listServiceTypes = async (): Promise<NovaPoshtaResponse<ServiceType
   })
 }
 
-export interface AreaName {
-  Description: string,
-  Ref: string
-}
-
-export const ListAreaNames = async (): Promise<NovaPoshtaResponse<AreaName>> => {
-  return novaPoshtaRequest({
-    modelName: "Address",
-    calledMethod: "getAreas",
-    methodProperties: {
-    }
-  })
-}
-
 export interface CityName {
-  Description: string,
+  DescriptionRu: string,
   Ref: string
 }
 
-export const ListCityNames = async (areaRef: string): Promise<NovaPoshtaResponse<CityName>> => {
+export const ListCityNames = async (): Promise<NovaPoshtaResponse<CityName>> => {
   return novaPoshtaRequest({
     modelName: "Address",
     calledMethod: "getCities",
     methodProperties: {
-      AreaRef: areaRef,
-      Page: "1",
-      // Limit: "20",
       Warehouse: "1",
     },
   });

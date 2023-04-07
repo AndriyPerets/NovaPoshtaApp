@@ -14,16 +14,11 @@ type Props = StackScreenProps<MainStackParamList, 'ChooseCityNameScreen'>;
 
 
 const ChooseCityNameScreen = ({navigation, route}: Props) => {
-	const { selectedArea } = route.params;
-	const cityNames = useCityNames(selectedArea.Ref);
+	const cityNames = useCityNames();
 	const {setCitySenderName,
 		setCityRecipientName,
 		setCitySenderRef,
-		citySenderName,
-		setCityRecipientRef,
-		cityRecipientName,
-		citySenderRef,
-		cityRecipientRef} = useContext(DimensionsContext);
+		setCityRecipientRef} = useContext(DimensionsContext);
 	const {top} = useSafeAreaInsets();
 	const { type } = route.params;
 	const [filter, setFilter] = useState('');
@@ -42,22 +37,24 @@ const ChooseCityNameScreen = ({navigation, route}: Props) => {
 			if(type === 'sender'){
 				setCitySenderName(item);
 				setCitySenderRef(item.Ref);
-				// console.log(citySenderRef);
-				// console.log("CitySenderName: ", item.Description);
 			} else if (type === 'recipient'){
 				setCityRecipientName(item);
 				setCityRecipientRef(item.Ref);
-				// console.log(cityRecipientRef);
-				// console.log("CityRecipientName: ", item.Description);
 			}
 			navigation.navigate('Route');
 		}
 		return (
-			<Pressable onPress={onItemPress} style={styles.cityItem} key={item.Description}>
-				<Text>{item.Description}</Text>
+			<Pressable onPress={onItemPress} style={styles.cityItem} key={item.Ref}>
+				<Text>{item.DescriptionRu}</Text>
 			</Pressable>
 		);
 	};
+
+	const filteredData = filter
+		? cityNames.data?.filter((city) =>
+			city.DescriptionRu.toLowerCase().includes(filter.toLowerCase())
+		)
+		: cityNames.data?.slice(0, 10);
 
 	return (
 		<>
@@ -80,11 +77,9 @@ const ChooseCityNameScreen = ({navigation, route}: Props) => {
 							/>
 						</View>
 					<FlatList
-						data={cityNames.data?.filter((city) =>
-							city.Description.toLowerCase().includes(filter.toLowerCase())
-						)}
+						data={filteredData}
 						renderItem={renderCityItem}
-						keyExtractor={item => item.Description}
+						keyExtractor={item => item.Ref}
 					/>
 				</View>
 			)}

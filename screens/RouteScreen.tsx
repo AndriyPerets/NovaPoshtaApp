@@ -60,8 +60,8 @@ export default function RouteScreen({navigation}: Props) {
   };
 
 
-  const goToAreaNameScreen = useCallback(
-    (type: 'sender' | 'recipient') => navigation.navigate('ChooseAreaNameScreen', {type}),
+  const goToCityNameScreen = useCallback(
+    (type: 'sender' | 'recipient') => navigation.navigate('ChooseCityNameScreen', {type}),
     []);
 
     const handleClearAll = () => {
@@ -81,10 +81,10 @@ export default function RouteScreen({navigation}: Props) {
             ...styles.buttonContent,
             opacity: !citySenderName ? 0.8 : 1,
           }}
-          onPress={() => goToAreaNameScreen("sender")}
+          onPress={() => goToCityNameScreen("sender")}
         >
           {citySenderName
-            ? `Город отправки: ${citySenderName.Description}`
+            ? `Город отправки: ${citySenderName.DescriptionRu}`
             : `Нажмите, чтобы выбрать название города`}
         </Button>
         <VerticalSpace height={16} />
@@ -94,10 +94,10 @@ export default function RouteScreen({navigation}: Props) {
             ...styles.buttonContent,
             opacity: !cargoType ? 0.8 : 1,
           }}
-          onPress={() => goToAreaNameScreen("recipient")}
+          onPress={() => goToCityNameScreen("recipient")}
         >
           {cityRecipientName
-            ? `Город доставки: ${cityRecipientName.Description}`
+            ? `Город доставки: ${cityRecipientName.DescriptionRu}`
             : `Нажмите, чтобы выбрать название города`}
         </Button>
 

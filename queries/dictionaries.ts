@@ -1,9 +1,7 @@
 import {useQuery} from "react-query";
 import {
-  AreaName,
   CargoType,
   CityName,
-  ListAreaNames,
   listCargoTypes, ListCityNames,
   listServiceTypes,
   RouteProps,
@@ -48,29 +46,11 @@ export const useServiceTypes = () => useQuery<ServiceType[], any, ServiceType[]>
   }
 });
 
-export const useAreaNames = () => useQuery<AreaName[], any, AreaName[]>('areaName', async () => {
-  const areaNameResponse = await ListAreaNames();
-  if (areaNameResponse.success && areaNameResponse.data.length > 0) {
-    return areaNameResponse.data
-  } else {
-    if (areaNameResponse.errors.length > 0) {
-      throw new Error(areaNameResponse.errors[0])
-    }
-    if (areaNameResponse.warnings.length > 0) {
-      throw new Error(areaNameResponse.errors[0])
-    }
-    if (areaNameResponse.info.length > 0) {
-      throw new Error(areaNameResponse.errors[0])
-    }
-    throw new Error('Unexpected error')
-  }
-});
-
-export const useCityNames = (areaRef: string) => {
+export const useCityNames = () => {
   return useQuery<CityName[], Error>(
-    ["cityNames", areaRef],
+    ["cityNames"],
     async () => {
-      const cityNameResponse = await ListCityNames(areaRef);
+      const cityNameResponse = await ListCityNames();
       if (cityNameResponse.success && cityNameResponse.data.length > 0) {
         return cityNameResponse.data;
       } else {
@@ -86,7 +66,6 @@ export const useCityNames = (areaRef: string) => {
         throw new Error("Unexpected error");
       }
     },
-    { enabled: !!areaRef }
   );
 };
 
