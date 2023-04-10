@@ -27,16 +27,20 @@ export const listServiceTypes = async (): Promise<NovaPoshtaResponse<ServiceType
 }
 
 export interface CityName {
-  DescriptionRu: string,
-  Ref: string
+  DescriptionRu: string;
+  Ref: string;
+  Latitude: string;
+  Longitude: string;
 }
 
 export const ListCityNames = async (): Promise<NovaPoshtaResponse<CityName>> => {
   return novaPoshtaRequest({
     modelName: "Address",
-    calledMethod: "getCities",
+    calledMethod: "getSettlements",
     methodProperties: {
       Warehouse: "1",
+      Latitude: "Latitude",
+      Longitude: "Longitude",
     },
   });
 };

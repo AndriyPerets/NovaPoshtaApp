@@ -3,7 +3,7 @@ import {DefaultTheme, NavigationContainer} from "@react-navigation/native";
 import React, {useState} from "react";
 import MainStackNavigator from "./navigation/MainNavigator";
 import {QueryClient, QueryClientProvider} from "react-query";
-import {AreaName, CargoType, CityName, ServiceType} from "./API/dictionaries";
+import {CargoType, CityName, ServiceType} from "./API/dictionaries";
 import { DimensionsContext } from "./AppContext";
 
 //пользовательская тема
@@ -26,8 +26,6 @@ export default function App() {
   const [weight, setWeight] = useState<string>();
   const [cost, setCost] = useState<string>();
   const [seatsAmount, setSeatsAmount] = useState<string>();
-  const [areaSenderName, setAreaSenderName] = useState<AreaName>();
-  const [areaRecipientName, setAreaRecipientName] = useState<AreaName>();
   const [citySenderName, setCitySenderName] = useState<CityName>();
   const [cityRecipientName, setCityRecipientName] = useState<CityName>();
   const [citySenderRef, setCitySenderRef] = useState<string | undefined>();
@@ -57,10 +55,6 @@ export default function App() {
               setCost,
               seatsAmount,
               setSeatsAmount,
-              areaSenderName,
-              setAreaSenderName,
-              areaRecipientName,
-              setAreaRecipientName,
               citySenderName,
               setCitySenderName,
               cityRecipientName,

@@ -1,4 +1,4 @@
-import {AreaName, CargoType, CityName, ServiceType} from "./API/dictionaries";
+import {CargoType, CityName, ServiceType} from "./API/dictionaries";
 import {createContext} from "react";
 
 //тип данных TypeScript для объекта контекста (DimensionsContext)
@@ -15,10 +15,6 @@ export interface DimensionsContextProps {
     setCost: (cost?: string) => void;
     seatsAmount?: string;
     setSeatsAmount: (seatsAmount?: string) => void;
-    areaSenderName?: AreaName
-    setAreaSenderName: (areaSenderName?: AreaName) => void;
-    areaRecipientName?: AreaName;
-    setAreaRecipientName: (areaRecipientName?: AreaName) => void;
     citySenderName?: CityName;
     setCitySenderName: (citySenderName?: CityName) => void;
     cityRecipientName?: CityName;
@@ -45,10 +41,6 @@ export const DimensionsContext = createContext<DimensionsContextProps>({
     cost: undefined,
     setSeatsAmount: () => {},
     seatsAmount: undefined,
-    setAreaSenderName: () => {},
-    areaSenderName: undefined,
-    setAreaRecipientName: () => {},
-    areaRecipientName: undefined,
     setCitySenderName: () => {},
     citySenderName: undefined,
     setCityRecipientName: () => {},
